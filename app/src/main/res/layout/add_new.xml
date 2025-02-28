@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".add_new"
+    android:background="#272727">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#272727">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/r9tnqpwzntbg"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/kodchasan_extralight"
+            android:textSize="40sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="85dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Music Player" />
+
+        <!-- Divider Line -->
+        <LinearLayout
+            android:id="@+id/r8gmsn2h13xm"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FFFFFF"
+            android:layout_marginBottom="69dp"
+            android:orientation="vertical">
+        </LinearLayout>
+
+        <!-- Add New Track -->
+        <LinearLayout
+            android:id="@+id/rqcslvhthcxh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="90dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginEnd="59dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/rstyd5d6d3va"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@mipmap/new_track"
+                android:layout_marginEnd="61dp"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/r54tu4wtuec9"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/kodchasan_extralight"
+                android:textSize="24sp"
+                android:layout_marginVertical="30dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:text="Add new track" />
+        </LinearLayout>
+
+        <!-- Add New Album -->
+        <LinearLayout
+            android:id="@+id/rtc00vy68h4f"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="90dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginEnd="55dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/rmaq729h2mv"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@mipmap/new_album"
+                android:layout_marginEnd="57dp"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/r0g5hr6wx1s7"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:layout_marginVertical="29dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/kodchasan_extralight"
+                android:layout_weight="1"
+                android:text="Add new album" />
+        </LinearLayout>
+
+        <!-- Add New Playlist -->
+
+        <!-- Bottom Navigation Icons -->
+        <LinearLayout
+            android:id="@+id/r4uguzsorqo4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="43dp"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/rjo7ltvlx88k"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="49dp"
+                android:background="@mipmap/new_playlist"
+                android:orientation="vertical"></LinearLayout>
+
+            <TextView
+                android:id="@+id/rvh8bqsooat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="29dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/kodchasan_extralight"
+                android:text="Add new playlist"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <!-- Bottom Navigation Icons -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="-40dp"
+            android:layout_marginTop="30dp"
+            android:background="#FFFFFF" />
+        <LinearLayout
+            android:id="@+id/r3mxsasg9szc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingBottom="0dp">
+
+            <!-- Divider Line -->
+
+
+            <!-- Icons Row -->
+            <LinearLayout
+                android:id="@+id/rm6mlya3lmp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"
+                android:weightSum="3">
+
+                <!-- Home Icon -->
+                <ImageView
+                    android:id="@+id/r5ltq7yf6zxd"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/home"
+
+                    android:gravity="center"/>
+
+                <!-- Media Icon -->
+                <ImageView
+                    android:id="@+id/r7n4q6fbh4w"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/media"
+
+                    android:gravity="center"/>
+
+                <!-- Plus Icon -->
+                <ImageView
+                    android:id="@+id/rh4ffxlei885"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/plus_on"
+
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <!-- Text Labels Row -->
+            <LinearLayout
+                android:id="@+id/r3oejf7fe8jw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="-10dp"
+                android:weightSum="3"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

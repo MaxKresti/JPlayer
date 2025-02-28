@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="411dp"
+    android:layout_height="914dp"
+    tools:context=".album_opened">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <!-- ScrollView для треков -->
+        <ScrollView
+            android:id="@+id/scrollViewTracks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#272727">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Верхняя часть с изображением и текстом -->
+                <ImageView
+                    android:id="@+id/rkdmo3ijob8o"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="21dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="35dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/back" />
+
+                <ImageView
+                    android:id="@+id/rehp08o098e"
+                    android:layout_width="match_parent"
+                    android:layout_height="315dp"
+                    android:layout_marginHorizontal="40dp"
+                    android:layout_marginBottom="19dp"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/image" />
+
+                <TextView
+                    android:id="@+id/rmo9n12emv1p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/kodchasan_extralight"
+                    android:text="Playlist name"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:id="@+id/rlpqnc0dzff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/rotrznqacr58"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="6dp">
+
+                        <ImageView
+                            android:id="@+id/rcrgpan1likl"
+                            android:layout_width="39dp"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="38dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/remix" />
+
+                        <ImageView
+                            android:id="@+id/rkb7aoqmlr8"
+                            android:layout_width="43dp"
+                            android:layout_height="43dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/play" />
+                    </LinearLayout>
+                    <View
+                        android:id="@+id/topLine"
+                        android:layout_width="411dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="16dp"
+                        android:background="#FFFFFF" />
+                </LinearLayout>
+
+
+                <!-- Контейнер для треков -->
+                <LinearLayout
+                    android:id="@+id/tracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                    <!-- Track 1 -->
+                    <LinearLayout
+                        android:id="@+id/track1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/r9ikxvam2ffp"
+                            android:layout_width="80dp"
+                            android:layout_height="70dp"
+                            android:layout_marginEnd="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/image" />
+
+                        <TextView
+                            android:id="@+id/ru8yzw2qahcc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Track 1"
+                            android:fontFamily="@font/kodchasan_extralight"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+
+                        <ImageView
+                            android:id="@+id/r3giia3epp9d"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginStart="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/three" />
+                    </LinearLayout>
+
+                    <!-- Track 2 -->
+                    <LinearLayout
+                        android:id="@+id/track2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/rlpzuxl82zr"
+                            android:layout_width="80dp"
+                            android:layout_height="70dp"
+                            android:layout_marginEnd="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/image" />
+
+                        <TextView
+                            android:id="@+id/r7ckntvkm6fj"
+                            android:fontFamily="@font/kodchasan_extralight"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Track 2"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+
+                        <ImageView
+                            android:id="@+id/rg3u9xxhryi"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginStart="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/three" />
+                    </LinearLayout>
+
+                    <!-- Track 3 -->
+                    <LinearLayout
+                        android:id="@+id/track3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/rzzlsyuvnjo"
+                            android:layout_width="80dp"
+                            android:layout_height="70dp"
+                            android:layout_marginEnd="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/image" />
+
+                        <TextView
+                            android:id="@+id/r94pbv83locw"
+                            android:fontFamily="@font/kodchasan_extralight"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Track 3"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+
+                        <ImageView
+                            android:id="@+id/rai9q31ah3wv"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginStart="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/three" />
+                    </LinearLayout>
+
+                    <!-- Track 4 -->
+                    <LinearLayout
+                        android:id="@+id/track4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/riqusgp293dn"
+                            android:layout_width="80dp"
+                            android:layout_height="70dp"
+                            android:layout_marginEnd="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/image" />
+
+                        <TextView
+                            android:id="@+id/r65e4agjn88g"
+                            android:fontFamily="@font/kodchasan_extralight"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Track 4"
+                            android:textColor="#FFFFFF"
+                            android:textSize="24sp" />
+
+                        <ImageView
+                            android:id="@+id/r8p0tvb16qq"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginStart="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/three" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

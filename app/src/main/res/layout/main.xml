@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#272727"
+    tools:context=".main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#272727"
+        android:padding="16dp">
+
+        <!-- Top Section with Settings Icon -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/rdt65jn85g4p"
+                android:fontFamily="@font/kodchasan_extralight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Music Player"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp" />
+
+            <ImageView
+                android:id="@+id/re0ktwcv8w2"
+                android:layout_width="38dp"
+                android:layout_height="39dp"
+                android:src="@mipmap/setting"
+                android:scaleType="fitXY"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <!-- Divider Line -->
+
+        <!-- Search Bar -->
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="16dp"
+            android:background="#FFFFFF" />
+
+        <LinearLayout
+            android:id="@+id/rqgfxw4zngz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rounded_background"
+            android:orientation="horizontal"
+            android:padding="14dp">
+
+            <ImageView
+                android:id="@+id/r4rnb7lthk05"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/lupa" />
+
+            <EditText
+                android:id="@+id/searchInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="   Search..."
+                android:textColor="#FFFFFF"
+                android:textColorHint="#A0A0A0"
+                android:background="@null"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+        <!-- Last Played Section -->
+        <TextView
+            android:id="@+id/rq54e754dhap"
+            android:fontFamily="@font/kodchasan_extralight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last played"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:layout_marginBottom="8dp"/>
+
+        <HorizontalScrollView
+            android:id="@+id/rf6i9iyblkt5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Example Track Items -->
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@mipmap/image"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="-20dp"
+                        android:fontFamily="@font/kodchasan_extralight"
+                        android:text="Track 1"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@mipmap/image"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kodchasan_extralight"
+                        android:text="Track 2"
+                        android:layout_marginLeft="-20dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <!-- Add more tracks as needed -->
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Recommendations Section -->
+        <TextView
+            android:id="@+id/rsq9zu46a8fq"
+            android:fontFamily="@font/kodchasan_extralight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recommendations"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:layout_marginBottom="8dp"/>
+
+        <HorizontalScrollView
+            android:id="@+id/rxyhiy4gam3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Example Track Items -->
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@mipmap/image"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:fontFamily="@font/kodchasan_extralight"
+                        android:layout_height="wrap_content"
+                        android:text="Track 1"
+                        android:layout_marginLeft="-20dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/image" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:fontFamily="@font/kodchasan_extralight"
+                        android:layout_height="wrap_content"
+                        android:text="Track 2"
+                        android:layout_marginLeft="-20dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <!-- Add more tracks as needed -->
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- New and Added Section -->
+        <TextView
+            android:id="@+id/r33ehpuq049s"
+            android:fontFamily="@font/kodchasan_extralight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New and Added"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:layout_marginBottom="8dp"/>
+
+        <HorizontalScrollView
+            android:id="@+id/r3p5zolcca9i"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Example Track Items -->
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@mipmap/image"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:fontFamily="@font/kodchasan_extralight"
+                        android:layout_height="wrap_content"
+                        android:text="Track 1"
+                        android:layout_marginLeft="-20dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@mipmap/image"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:fontFamily="@font/kodchasan_extralight"
+                        android:layout_height="wrap_content"
+                        android:text="Track 2"
+                        android:layout_marginLeft="-20dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <!-- Add more tracks as needed -->
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Bottom Navigation Icons -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:background="#FFFFFF" />
+        <LinearLayout
+            android:id="@+id/r3mxsasg9szc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingBottom="0dp">
+
+            <!-- Divider Line -->
+
+
+            <!-- Icons Row -->
+            <LinearLayout
+                android:id="@+id/rm6mlya3lmp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"
+                android:weightSum="3">
+
+                <!-- Home Icon -->
+                <ImageView
+                    android:id="@+id/r5ltq7yf6zxd"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/home_on"
+
+                    android:gravity="center"/>
+
+                <!-- Media Icon -->
+                <ImageView
+                    android:id="@+id/r7n4q6fbh4w"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/media"
+
+                    android:gravity="center"/>
+
+                <!-- Plus Icon -->
+                <ImageView
+                    android:id="@+id/rh4ffxlei885"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/plus"
+
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <!-- Text Labels Row -->
+            <LinearLayout
+                android:id="@+id/r3oejf7fe8jw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="-14dp"
+                android:weightSum="3"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

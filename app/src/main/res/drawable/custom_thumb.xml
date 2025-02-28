@@ -1,0 +1,27 @@
+<!-- res/drawable/custom_thumb.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Тень -->
+    <item
+        android:left="2dp"
+        android:top="2dp">
+        <shape android:shape="oval">
+            <solid android:color="#80000000" /> <!-- Цвет тени -->
+            <size
+                android:width="16dp"
+                android:height="16dp" />
+        </shape>
+    </item>
+
+    <!-- Основной ползунок -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#9C27B0" /> <!-- Цвет ползунка -->
+            <size
+                android:width="16dp"
+                android:height="16dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#FFFFFF" /> <!-- Обводка -->
+        </shape>
+    </item>
+</layer-list>
