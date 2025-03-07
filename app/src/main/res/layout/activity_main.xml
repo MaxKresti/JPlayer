@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#272727"
+    tools:context=".main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#272727"
+        android:padding="16dp">
+
+        <!-- Top Section with Settings Icon -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/label"
+                android:fontFamily="@font/kodchasan"
+                android:textSize="40sp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Music Player" />
+
+            <ImageView
+                android:id="@+id/setting"
+                android:layout_width="38dp"
+                android:layout_height="39dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="setting"
+                android:src="@mipmap/setting"
+                android:scaleType="fitXY"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="16dp"
+            android:background="#FFFFFF" />
+
+        <!-- Search Bar -->
+        <LinearLayout
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rounded_background"
+            android:orientation="horizontal"
+            android:padding="14dp">
+
+            <ImageView
+                android:id="@+id/lupa"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/lupa" />
+
+            <EditText
+                android:id="@+id/searchInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="   Search..."
+                android:textColor="#FFFFFF"
+                android:textColorHint="#A0A0A0"
+                android:background="@null"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+        <!-- Last Played Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/last"
+                android:fontFamily="@font/kodchasan"
+                android:textSize="32dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last played"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Horizontal Scroll View -->
+            <HorizontalScrollView
+                android:id="@+id/scroller_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/last"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Example Track Items -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lay_last"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp">
+
+                        <include
+                            layout="@layout/main_track"
+                            android:id="@+id/track1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Repeat for other tracks -->
+                </LinearLayout>
+            </HorizontalScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Recommendations Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lay_rec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/recs"
+                android:fontFamily="@font/kodchasan"
+                android:textSize="32dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recommendations"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Horizontal Scroll View -->
+            <HorizontalScrollView
+                android:id="@+id/scroller_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/recs"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Example Track Items -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp">
+
+                        <include
+                            android:id="@+id/track2"
+                            layout="@layout/main_track"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Repeat for other tracks -->
+                </LinearLayout>
+            </HorizontalScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- New and Added Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lay_new"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/new_and_add"
+                android:fontFamily="@font/kodchasan"
+                android:textSize="32dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New and Added"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Horizontal Scroll View -->
+            <HorizontalScrollView
+                android:id="@+id/scroller_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/new_and_add"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Example Track Items -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp">
+
+                        <include
+                            layout="@layout/main_track"
+                            android:id="@+id/track3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Repeat for other tracks -->
+                </LinearLayout>
+            </HorizontalScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Bottom Navigation Icons -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="20dp"
+            android:background="#FFFFFF" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            tools:ignore="MissingConstraints">
+
+            <!-- Home Icon -->
+            <ImageView
+                android:id="@+id/home"
+                android:src="@mipmap/home_on"
+                style="@style/IconButton"
+                android:clickable="true"
+                android:focusable="true"
+                android:name="home"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/media"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Media Icon -->
+            <ImageView
+                android:id="@+id/media"
+                android:src="@mipmap/media"
+                style="@style/IconButton.Active"
+                android:clickable="true"
+                android:focusable="true"
+                android:name="media"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/home"
+                app:layout_constraintEnd_toStartOf="@id/plus"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Plus Icon -->
+            <ImageView
+                android:id="@+id/plus"
+                android:src="@mipmap/plus"
+                style="@style/IconButton"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="plus"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/media"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

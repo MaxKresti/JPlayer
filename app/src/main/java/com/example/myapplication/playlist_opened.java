@@ -14,11 +14,14 @@ public class playlist_opened extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.playlist_opened);
+        setContentView(R.layout.activity_playlist_opened);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+        findViewById(R.id.back).setOnClickListener(v -> {
+            onBackPressed(); // Возврат на предыдущую страницу
         });
     }
 }

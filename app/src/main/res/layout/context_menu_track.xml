@@ -1,0 +1,246 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="448dp"
+    android:layout_height="400dp"
+    android:background="#272727"
+    android:padding="16dp">
+
+    <!-- Заголовок меню -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp">
+
+        <!-- Иконка трека -->
+        <ImageView
+            android:id="@+id/trackIcon"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:src="@mipmap/image"
+            android:scaleType="fitXY"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Обложка трека"
+            android:clickable="false"
+            android:focusable="false" />
+
+        <!-- Название трека и автора -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/trackName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Track Name"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <TextView
+                android:id="@+id/authorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Author Name"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Разделитель -->
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!-- Пункты меню -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menuItems"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/divider1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingVertical="16dp">
+
+        <!-- Добавить в плейлист -->
+        <LinearLayout
+            android:id="@+id/addToPlaylist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Добавить в плейлист"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/addToPlaylistIcon"
+                android:layout_width="39dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/plus"
+                android:scaleType="fitXY"
+                android:layout_marginEnd="16dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:contentDescription="Иконка добавления в плейлист" />
+
+            <TextView
+                android:id="@+id/addToPlaylistText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add to the playlist"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
+        <!-- Переименовать -->
+        <LinearLayout
+            android:id="@+id/rename"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Переименовать"
+            app:layout_constraintTop_toBottomOf="@id/addToPlaylist"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/renameIcon"
+                android:layout_width="39dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/rename"
+                android:scaleType="fitXY"
+                android:layout_marginEnd="16dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:contentDescription="Иконка переименования" />
+
+            <TextView
+                android:id="@+id/renameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rename"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
+        <!-- Удалить -->
+        <LinearLayout
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Удалить"
+            app:layout_constraintTop_toBottomOf="@id/rename"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/deleteIcon"
+                android:layout_width="39dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/trash"
+                android:scaleType="fitXY"
+                android:layout_marginEnd="16dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:contentDescription="Иконка удаления" />
+
+            <TextView
+                android:id="@+id/deleteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
+        <!-- В альбом -->
+        <LinearLayout
+            android:id="@+id/toAlbum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Перейти в альбом"
+            app:layout_constraintTop_toBottomOf="@id/delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/toAlbumIcon"
+                android:layout_width="37dp"
+                android:layout_height="39dp"
+                android:src="@mipmap/new_album"
+                android:scaleType="fitXY"
+                android:layout_marginEnd="16dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:contentDescription="Иконка перехода в альбом" />
+
+            <TextView
+                android:id="@+id/toAlbumText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To the album"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
