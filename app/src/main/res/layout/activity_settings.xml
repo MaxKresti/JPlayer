@@ -4,20 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".settings"
+    android:id="@+id/settings"
     android:background="#272727">
 
     <!-- Кнопка "Назад" -->
     <ImageView
         android:id="@+id/back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@mipmap/back"
+        android:scaleType="fitXY"
         android:clickable="true"
         android:focusable="true"
-        android:scaleType="fitXY"
+        android:contentDescription="Назад"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="10dp" />
 
     <!-- Заголовок "Settings" -->
@@ -32,8 +35,8 @@
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/back"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="30dp" />
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp" />
 
     <!-- Разделитель -->
     <View
@@ -73,8 +76,8 @@
         android:layout_marginTop="16dp" />
 
     <!-- Контейнер для RadioButton и текста -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/buttons"
+    <RadioGroup
+        android:id="@+id/themeRadioGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/topLine"
@@ -91,8 +94,6 @@
             android:buttonTint="#FFFFFF"
             android:scaleX="1.3"
             android:scaleY="1.3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="4dp" />
 
         <TextView
@@ -103,10 +104,8 @@
             android:fontFamily="@font/kodchasan"
             android:textSize="32dp"
             android:textColor="#FFFFFF"
-            app:layout_constraintTop_toTopOf="@id/darkThemeRadio"
-            app:layout_constraintBottom_toBottomOf="@id/darkThemeRadio"
-            app:layout_constraintStart_toEndOf="@id/darkThemeRadio"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp" />
 
         <!-- Light Theme -->
         <RadioButton
@@ -116,8 +115,6 @@
             android:buttonTint="#FFFFFF"
             android:scaleX="1.3"
             android:scaleY="1.3"
-            app:layout_constraintTop_toBottomOf="@id/darkThemeRadio"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="58dp" />
 
         <TextView
@@ -128,11 +125,9 @@
             android:fontFamily="@font/kodchasan"
             android:textSize="32dp"
             android:textColor="#FFFFFF"
-            app:layout_constraintTop_toTopOf="@id/lightThemeRadio"
-            app:layout_constraintBottom_toBottomOf="@id/lightThemeRadio"
-            app:layout_constraintStart_toEndOf="@id/lightThemeRadio"
-            android:layout_marginStart="16dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="58dp" />
+    </RadioGroup>
 
     <!-- Изображение луны -->
     <ImageView
@@ -141,10 +136,10 @@
         android:layout_height="400dp"
         android:src="@mipmap/moon"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@id/buttons"
+        app:layout_constraintTop_toBottomOf="@id/themeRadioGroup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="45dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

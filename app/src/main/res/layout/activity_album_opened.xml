@@ -6,6 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#272727"
     tools:context=".album_opened">
 
     <LinearLayout
@@ -39,9 +40,10 @@
             <!-- Изображение плейлиста -->
             <ImageView
                 android:id="@+id/image_of"
-                android:layout_width="match_parent"
-                android:layout_height="315dp"
-                android:layout_marginHorizontal="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginHorizontal="60dp"
+                android:layout_marginTop="-40dp"
                 android:layout_marginBottom="19dp"
                 android:scaleType="fitXY"
                 android:src="@mipmap/image" />
@@ -146,10 +148,7 @@
                         layout="@layout/item_track"
                         android:id="@+id/track3" />
 
-                    <!-- Track 4 -->
-                    <include
-                        layout="@layout/item_track"
-                        android:id="@+id/track4" />
+
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

@@ -4,7 +4,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".add_new"
+    tools:context=".playlists"
     android:background="#272727">
 
     <LinearLayout
@@ -27,30 +27,25 @@
         <!-- Tabs: Tracks, Albums, Playlists -->
         <LinearLayout
             android:id="@+id/tabsContainer"
-            android:layout_marginLeft="-50dp"
-            android:layout_width="500dp"
-            android:layout_height="50dp">
+            android:layout_marginLeft="-45dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <Button
-                tools:text="Tracks"
                 android:id="@+id/tracksButton"
                 style="@style/Button"
-                />
+                android:text="Tracks" />
 
             <Button
-                tools:text="Albums"
                 android:id="@+id/albumsButton"
                 style="@style/Button"
-                />
-
+                android:text="Albums" />
 
             <Button
-                tools:text="Playlists"
                 android:id="@+id/playlistsButton"
                 style="@style/Button"
-                android:backgroundTint="#9C27B0"
-                />
-
+                android:text="Playlists"
+            android:backgroundTint="#9C27B0" />
         </LinearLayout>
 
         <!-- Search Bar -->
@@ -141,22 +136,7 @@
                         layout="@layout/item_playlist"
                         android:id="@+id/track3" />
 
-                    <!-- Track 4 -->
-                    <include
-                        layout="@layout/item_playlist"
-                        android:id="@+id/track4" />
 
-                    <include
-                        layout="@layout/item_playlist"
-                        android:id="@+id/track5" />
-
-                    <include
-                        layout="@layout/item_playlist"
-                        android:id="@+id/track6" />
-
-                    <include
-                        layout="@layout/item_playlist"
-                        android:id="@+id/track7" />
                 </LinearLayout>
 
                 <!-- Three Dots Button -->
@@ -187,7 +167,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="1dp"
                 tools:ignore="MissingConstraints">
 
                 <!-- Home Icon -->

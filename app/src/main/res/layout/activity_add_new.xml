@@ -151,9 +151,9 @@
         <View
             android:id="@+id/bottomDivider"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="150dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="173dp"
+            android:layout_marginBottom="20dp"
             android:background="#FFFFFF" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -166,35 +166,32 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="1dp"
+
                 tools:ignore="MissingConstraints">
 
                 <!-- Home Icon -->
                 <ImageView
-                    android:id="@+id/home"
-                    android:src="@mipmap/home"
-                    style="@style/IconButton"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="home"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/media"
-                    android:layout_marginEnd="16dp" />
+                android:id="@+id/home"
+                android:src="@mipmap/home"
+                style="@style/IconButton"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="home"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/media"
+                android:layout_marginEnd="16dp" />
 
                 <!-- Media Icon -->
                 <ImageView
                     android:id="@+id/media"
                     android:src="@mipmap/media"
-                    style="@style/IconButton"
+                    style="@style/IconButton.Active"
                     android:clickable="true"
                     android:focusable="true"
                     android:contentDescription="media"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/home"
                     app:layout_constraintEnd_toStartOf="@id/plus"
@@ -204,12 +201,10 @@
                 <ImageView
                     android:id="@+id/plus"
                     android:src="@mipmap/plus_on"
-                    style="@style/IconButton.Active"
+                    style="@style/IconButton"
                     android:clickable="true"
                     android:focusable="true"
                     android:contentDescription="plus"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/media"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,46 +17,39 @@ public class main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ImageView mediaButton = findViewById(R.id.media);
+        // Обработчики для кнопок навигации
         ImageView plusButton = findViewById(R.id.plus);
-        ImageView settingButton = findViewById(R.id.setting);
+        ImageView mediaButton = findViewById(R.id.media);
+        ImageView settingsButton = findViewById(R.id.setting);
 
-        mediaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(main.this, tracks.class);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error starting tracks activity", e);
-                }
-            }
+        plusButton.setOnClickListener(v -> {
+            Intent intent = new Intent(main.this, add_new.class);
+            startActivity(intent);
         });
 
-        plusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(main.this, add_new.class);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error starting add_new activity", e);
-                }
-            }
+        mediaButton.setOnClickListener(v -> {
+            Intent intent = new Intent(main.this, tracks.class);
+            startActivity(intent);
         });
 
-        settingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent intent = new Intent(main.this, settings.class);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error starting settings activity", e);
-                }
-            }
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(main.this, settings.class);
+            startActivity(intent);
         });
 
+            View track1 = findViewById(R.id.track1);
+            View track2 = findViewById(R.id.track2);
+            View track3 = findViewById(R.id.track3);
 
+            track1.setOnClickListener(v -> openMusicPlayingActivity());
+            track2.setOnClickListener(v -> openMusicPlayingActivity());
+            track3.setOnClickListener(v -> openMusicPlayingActivity());
+
+        }
+
+        private void openMusicPlayingActivity() {
+            Intent intent = new Intent(main.this, music_playing.class);
+            startActivity(intent);
+        }
     }
-}
+

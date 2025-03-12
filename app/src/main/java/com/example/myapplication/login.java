@@ -24,14 +24,14 @@ public class login extends AppCompatActivity {
             return insets;
         });
 
-        // Находим кнопку "Зарегистрироваться"
+
         Button registerButton = findViewById(R.id.registerButton);
 
-        // Устанавливаем обработчик нажатия
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Переход на страницу регистрации
+
                 Intent intent = new Intent(login.this, registration.class);
                 startActivity(intent);
             }

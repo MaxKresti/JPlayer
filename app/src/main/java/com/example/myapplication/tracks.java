@@ -2,8 +2,14 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,14 +25,12 @@ public class tracks extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tracks);
 
-        // Настройка Edge-to-Edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainLayout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Обработчики для кнопок навигации
         findViewById(R.id.home).setOnClickListener(v -> {
             Intent intent = new Intent(tracks.this, main.class);
             startActivity(intent);
@@ -42,13 +46,13 @@ public class tracks extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Обработчики для кнопок вкладок
+
         Button tracksButton = findViewById(R.id.tracksButton);
         Button albumsButton = findViewById(R.id.albumsButton);
         Button playlistsButton = findViewById(R.id.playlistsButton);
 
         tracksButton.setOnClickListener(v -> {
-            // Уже находимся на странице tracks, поэтому ничего не делаем
+
         });
 
         albumsButton.setOnClickListener(v -> {
@@ -61,43 +65,98 @@ public class tracks extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Обработчики для элементов item_track
+
         setupTrackClickListeners();
     }
 
-    // Метод для настройки обработчиков нажатий на элементы item_track
-    private void setupTrackClickListeners() {
-        // Находим корневые элементы вложенных макетов (item_track)
-        View track1 = findViewById(R.id.track1); // Убедитесь, что у include есть id
-        View track2 = findViewById(R.id.track2); // Убедитесь, что у include есть id
-        // Добавьте остальные элементы, если они есть
 
-        // Обработчики для элементов track1
+    private void setupTrackClickListeners() {
+
+        View track1 = findViewById(R.id.track1);
+        View track2 = findViewById(R.id.track2);
+        View track3 = findViewById(R.id.track3);
+
+
+
         if (track1 != null) {
             View trackImage1 = track1.findViewById(R.id.trackImage);
             View trackName1 = track1.findViewById(R.id.trackName);
             View trackAuthor1 = track1.findViewById(R.id.trackAuthor);
+            ImageView trackMenu1 = track1.findViewById(R.id.trackMenu);
 
             trackImage1.setOnClickListener(v -> openMusicPlayingActivity());
             trackName1.setOnClickListener(v -> openMusicPlayingActivity());
             trackAuthor1.setOnClickListener(v -> openMusicPlayingActivity());
+
+            trackMenu1.setOnClickListener(v -> showContextMenu(v));
         }
 
-        // Обработчики для элементов track2
         if (track2 != null) {
             View trackImage2 = track2.findViewById(R.id.trackImage);
             View trackName2 = track2.findViewById(R.id.trackName);
             View trackAuthor2 = track2.findViewById(R.id.trackAuthor);
+            ImageView trackMenu2 = track2.findViewById(R.id.trackMenu);
 
             trackImage2.setOnClickListener(v -> openMusicPlayingActivity());
             trackName2.setOnClickListener(v -> openMusicPlayingActivity());
             trackAuthor2.setOnClickListener(v -> openMusicPlayingActivity());
+
+            trackMenu2.setOnClickListener(v -> showContextMenu(v));
         }
 
-        // Добавьте обработчики для остальных треков (track3, track4 и т.д.)
+        if (track3 != null) {
+            View trackImage3 = track3.findViewById(R.id.trackImage);
+            View trackName3 = track3.findViewById(R.id.trackName);
+            View trackAuthor3 = track3.findViewById(R.id.trackAuthor);
+            ImageView trackMenu3 = track3.findViewById(R.id.trackMenu);
+
+            trackImage3.setOnClickListener(v -> openMusicPlayingActivity());
+            trackName3.setOnClickListener(v -> openMusicPlayingActivity());
+            trackAuthor3.setOnClickListener(v -> openMusicPlayingActivity());
+
+            trackMenu3.setOnClickListener(v -> showContextMenu(v));
+        }
     }
 
-    // Метод для перехода на страницу music_playing
+    private void showContextMenu(View anchorView) {
+        // Создаем PopupWindow
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.context_menu_track, null);
+
+        PopupWindow popupWindow = new PopupWindow(
+                popupView,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true
+        );
+
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+
+        popupWindow.setElevation(10);
+
+        LinearLayout addToPlaylist = popupView.findViewById(R.id.addToPlaylist);
+        LinearLayout rename = popupView.findViewById(R.id.rename);
+        LinearLayout delete = popupView.findViewById(R.id.delete);
+
+
+        addToPlaylist.setOnClickListener(v -> {
+            Toast.makeText(this, "Add to playlist clicked", Toast.LENGTH_SHORT).show();
+            popupWindow.dismiss();
+        });
+
+        rename.setOnClickListener(v -> {
+            Toast.makeText(this, "Rename clicked", Toast.LENGTH_SHORT).show();
+            popupWindow.dismiss();
+        });
+
+        delete.setOnClickListener(v -> {
+            Toast.makeText(this, "Delete clicked", Toast.LENGTH_SHORT).show();
+            popupWindow.dismiss();
+        });
+
+        popupWindow.showAtLocation(anchorView, Gravity.BOTTOM, 0, 0);
+    }
+
     private void openMusicPlayingActivity() {
         Intent intent = new Intent(tracks.this, music_playing.class);
         startActivity(intent);
