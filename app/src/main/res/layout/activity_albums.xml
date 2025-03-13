@@ -158,61 +158,16 @@
             android:background="#FFFFFF" />
 
 
-
         <!-- Bottom Navigation Icons -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomNavigationContainer"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:paddingBottom="0dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="1dp"
-                tools:ignore="MissingConstraints">
-
-                <!-- Home Icon -->
-                <ImageView
-                    android:id="@+id/home"
-                    android:src="@mipmap/home"
-                    style="@style/IconButton"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="home"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/media"
-                    android:layout_marginEnd="16dp" />
-
-                <!-- Media Icon -->
-                <ImageView
-                    android:id="@+id/media"
-                    android:src="@mipmap/media_open"
-                    style="@style/IconButton.Active"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="media"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/home"
-                    app:layout_constraintEnd_toStartOf="@id/plus"
-                    android:layout_marginEnd="16dp" />
-
-                <!-- Plus Icon -->
-                <ImageView
-                    android:id="@+id/plus"
-                    android:src="@mipmap/plus"
-                    style="@style/IconButton"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="plus"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/media"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            style="@style/BottomNavigationTransparent"
+            app:menu="@menu/bottom_nav_menu"
+            app:itemIconTint="@drawable/bottom_nav_colors"
+            app:itemTextColor="@drawable/bottom_nav_colors"
+            app:labelVisibilityMode="labeled" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

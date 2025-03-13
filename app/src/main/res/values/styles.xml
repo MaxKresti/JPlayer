@@ -2,6 +2,15 @@
 
 
 
+        <!-- Базовый стиль для BottomNavigationView -->
+        <style name="BottomNavigationTransparent" parent="Widget.MaterialComponents.BottomNavigationView">
+            <item name="backgroundTint">@android:color/transparent</item> <!-- Прозрачный фон -->
+            <item name="itemIconTint">@drawable/bottom_nav_colors</item> <!-- Цвет иконок -->
+            <item name="itemTextColor">@drawable/bottom_nav_colors</item> <!-- Цвет текста -->
+            <item name="itemRippleColor">@color/purple_200</item> <!-- Цвет ripple-эффекта -->
+            <item name="labelVisibilityMode">labeled</item> <!-- Показывать текст под иконками -->
+        </style>
+
         <!-- Стиль для иконок -->
         <style name="IconButton">
             <item name="android:layout_width">40dp</item>
@@ -20,7 +29,10 @@
             <item name="android:tint">#A0A0A0</item> <!-- Пример цвета для неактивной иконки -->
         </style>
 
-
+    <style name="PopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
 
     <style name="Button">
         <item name="android:layout_width">114dp</item>

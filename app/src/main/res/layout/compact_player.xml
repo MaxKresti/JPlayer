@@ -85,7 +85,21 @@
         android:contentDescription="Следующий трек"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintEnd_toStartOf="@id/closeButton"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Кнопка закрытия -->
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/close"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:contentDescription="Закрыть"
+    android:clickable="true"
+    android:focusable="true"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

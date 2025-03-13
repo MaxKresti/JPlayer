@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -11,41 +12,46 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class albums extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_albums);
 
-        View mainLayout = findViewById(R.id.mainLayout);
-        if (mainLayout != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
-            });
-        }
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.media); // Установите выбранный элемент
 
-        findViewById(R.id.home).setOnClickListener(v -> {
-            Intent intent = new Intent(albums.this, main.class);
-            startActivity(intent);
-        });
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
 
-        findViewById(R.id.media).setOnClickListener(v -> {
-            Intent intent = new Intent(albums.this, tracks.class);
-            startActivity(intent);
-        });
+                if (itemId == R.id.home) {
+                    Intent homeIntent = new Intent(albums.this, main.class);
+                    startActivity(homeIntent);
 
-        findViewById(R.id.plus).setOnClickListener(v -> {
-            Intent intent = new Intent(albums.this, add_new.class);
-            startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.media) {
+                    // Уже на экране медиа
+                    return true;
+                } else if (itemId == R.id.plus) {
+                    Intent plusIntent = new Intent(albums.this, add_new.class);
+                    startActivity(plusIntent);
+
+                    return true;
+                }
+
+                return false;
+            }
         });
 
 
@@ -146,10 +152,13 @@ public class albums extends AppCompatActivity {
 
 
     private void showContextMenu(View anchorView) {
-
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.context_menu_album, null);
 
+        if (popupView == null) {
+            Toast.makeText(this, "Error: popupView is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         PopupWindow popupWindow = new PopupWindow(
                 popupView,
@@ -158,10 +167,11 @@ public class albums extends AppCompatActivity {
                 true
         );
 
-
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
         popupWindow.setElevation(10);
 
+        // Устанавливаем анимацию появления и исчезновения
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
 
         LinearLayout rename = popupView.findViewById(R.id.rename);
         LinearLayout delete = popupView.findViewById(R.id.delete);
@@ -180,8 +190,14 @@ public class albums extends AppCompatActivity {
             });
         }
 
-
+        // Показываем контекстное меню снизу
         popupWindow.showAtLocation(anchorView, Gravity.BOTTOM, 0, 0);
+
+        // Закрытие меню при касании вне его области
+        popupView.setOnTouchListener((v, event) -> {
+            popupWindow.dismiss();
+            return true;
+        });
     }
 
 

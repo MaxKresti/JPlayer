@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -11,71 +12,72 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class playlists extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_playlists);
 
-        View mainLayout = findViewById(R.id.mainLayout);
-        if (mainLayout != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
-            });
-        }
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.media); // Установите выбранный элемент
 
-        findViewById(R.id.home).setOnClickListener(v -> {
-            Intent intent = new Intent(playlists.this, main.class);
-            startActivity(intent);
-        });
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
 
-        findViewById(R.id.media).setOnClickListener(v -> {
-            Intent intent = new Intent(playlists.this, tracks.class);
-            startActivity(intent);
-        });
+                if (itemId == R.id.home) {
+                    Intent homeIntent = new Intent(playlists.this, main.class);
+                    startActivity(homeIntent);
 
-        findViewById(R.id.plus).setOnClickListener(v -> {
-            Intent intent = new Intent(playlists.this, add_new.class);
-            startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.media) {
+                    // Уже на экране медиа
+                    return true;
+                } else if (itemId == R.id.plus) {
+                    Intent plusIntent = new Intent(playlists.this, add_new.class);
+                    startActivity(plusIntent);
+
+                    return true;
+                }
+
+                return false;
+            }
         });
 
         Button tracksButton = findViewById(R.id.tracksButton);
         Button albumsButton = findViewById(R.id.albumsButton);
         Button playlistsButton = findViewById(R.id.playlistsButton);
 
-        if (tracksButton != null) {
-            tracksButton.setOnClickListener(v -> {
-                Intent intent = new Intent(playlists.this, tracks.class);
-                startActivity(intent);
-            });
-        }
+        tracksButton.setOnClickListener(v -> {
+            // Уже на экране треков
+        });
 
-        if (albumsButton != null) {
-            albumsButton.setOnClickListener(v -> {
-                Intent intent = new Intent(playlists.this, albums.class);
-                startActivity(intent);
-            });
-        }
+        albumsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(playlists.this, albums.class);
+            startActivity(intent);
+        });
 
-        if (playlistsButton != null) {
-            playlistsButton.setOnClickListener(v -> {
-            });
-        }
+        playlistsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(playlists.this, playlists.class);
+            startActivity(intent);
+        });
 
         setupPlaylistClickListeners();
+
     }
 
-    private void setupPlaylistClickListeners() {
 
+    private void setupPlaylistClickListeners() {
         View track1 = findViewById(R.id.track1);
         View track2 = findViewById(R.id.track2);
         View track3 = findViewById(R.id.track3);
@@ -111,7 +113,6 @@ public class playlists extends AppCompatActivity {
                 playlistName2.setOnClickListener(v -> openPlaylistActivity());
             }
 
-
             if (trackMenu2 != null) {
                 trackMenu2.setOnClickListener(v -> showContextMenu(v));
             }
@@ -130,7 +131,6 @@ public class playlists extends AppCompatActivity {
                 playlistName3.setOnClickListener(v -> openPlaylistActivity());
             }
 
-
             if (trackMenu3 != null) {
                 trackMenu3.setOnClickListener(v -> showContextMenu(v));
             }
@@ -138,7 +138,6 @@ public class playlists extends AppCompatActivity {
     }
 
     private void showContextMenu(View anchorView) {
-
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.context_menu_playlist, null);
 
@@ -157,6 +156,9 @@ public class playlists extends AppCompatActivity {
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
         popupWindow.setElevation(10);
 
+        // Устанавливаем анимацию появления и исчезновения
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
         LinearLayout rename = popupView.findViewById(R.id.rename);
         LinearLayout delete = popupView.findViewById(R.id.delete);
 
@@ -174,7 +176,14 @@ public class playlists extends AppCompatActivity {
             });
         }
 
+        // Показываем контекстное меню снизу
         popupWindow.showAtLocation(anchorView, Gravity.BOTTOM, 0, 0);
+
+        // Закрытие меню при касании вне его области
+        popupView.setOnTouchListener((v, event) -> {
+            popupWindow.dismiss();
+            return true;
+        });
     }
 
     private void openPlaylistActivity() {
@@ -182,4 +191,3 @@ public class playlists extends AppCompatActivity {
         startActivity(intent);
     }
 }
-

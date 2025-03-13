@@ -8,10 +8,15 @@
     android:background="#272727">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/main_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        android:background="#272727">
+        android:background="#272727"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Title -->
         <TextView
@@ -35,21 +40,17 @@
                 android:text="Tracks"
                 android:id="@+id/tracksButton"
                 style="@style/Button"
-                android:backgroundTint="#9C27B0"
-                />
+                android:backgroundTint="#9C27B0" />
 
             <Button
                 android:text="Albums"
                 android:id="@+id/albumsButton"
-                style="@style/Button"
-               />
-
+                style="@style/Button" />
 
             <Button
                 android:text="Playlists"
                 android:id="@+id/playlistsButton"
-                style="@style/Button"
-                />
+                style="@style/Button" />
         </LinearLayout>
 
         <!-- Search Bar -->
@@ -110,43 +111,33 @@
             android:layout_weight="1"
             android:background="#272727">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/tracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    tools:ignore="MissingConstraints">
 
+                    <!-- Track 1 -->
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track1" />
 
+                    <!-- Track 2 -->
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track2" />
 
-        <LinearLayout
-            android:id="@+id/tracksContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp"
-            tools:ignore="MissingConstraints">
-
-            <!-- Track 1 -->
-            <include
-                layout="@layout/item_track"
-                android:id="@+id/track1" />
-
-            <!-- Track 2 -->
-            <include
-                layout="@layout/item_track"
-                android:id="@+id/track2" />
-
-            <!-- Track 3 -->
-            <include
-                layout="@layout/item_track"
-                android:id="@+id/track3" />
-
-
-        </LinearLayout>
-
-        <!-- Three Dots Button -->
-
-
-
+                    <!-- Track 3 -->
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track3" />
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
@@ -158,61 +149,31 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
             android:background="#FFFFFF" />
-
-        <!-- Bottom Navigation Icons -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomNavigationContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="0dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="1dp"
-                tools:ignore="MissingConstraints">
-
-                <!-- Home Icon -->
-                <ImageView
-                    android:id="@+id/home"
-                    android:src="@mipmap/home"
-                    style="@style/IconButton"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="home"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/media"
-                    android:layout_marginEnd="16dp" />
-
-                <!-- Media Icon -->
-                <ImageView
-                    android:id="@+id/media"
-                    android:src="@mipmap/media_open"
-                    style="@style/IconButton.Active"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="media"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/home"
-                    app:layout_constraintEnd_toStartOf="@id/plus"
-                    android:layout_marginEnd="16dp" />
-
-                <!-- Plus Icon -->
-                <ImageView
-                    android:id="@+id/plus"
-                    android:src="@mipmap/plus"
-                    style="@style/IconButton"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="plus"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/media"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
+
+    <!-- Compact Player -->
+    <include
+        android:id="@+id/compact_player"
+        layout="@layout/compact_player"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        style="@style/BottomNavigationTransparent"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@drawable/bottom_nav_colors"
+        app:itemTextColor="@drawable/bottom_nav_colors"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -18,7 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class playlist_opened extends AppCompatActivity {
 
-    private boolean isPlaying = false; // Флаг для отслеживания состояния воспроизведения
+    private boolean isPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,36 +29,44 @@ public class playlist_opened extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_playlist_opened);
 
-        // Настройка Edge-to-Edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.play_op), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Обработчик для кнопки "Назад"
         findViewById(R.id.back).setOnClickListener(v -> {
-            onBackPressed(); // Возврат на предыдущую страницу
+            onBackPressed();
         });
 
-        // Получаем кнопку "Play"
         ImageView playButton = findViewById(R.id.play);
 
-        // Обработчик для кнопки "Play/Pause"
-        playButton.setOnClickListener(v -> {
-            if (isPlaying) {
-                // Если воспроизведение идёт, меняем на "Play"
-                playButton.setImageResource(R.mipmap.play);
-                isPlaying = false;
-            } else {
-                // Если воспроизведение не идёт, меняем на "Pause"
-                playButton.setImageResource(R.mipmap.pause);
-                isPlaying = true;
-            }
-        });
+        playButton.setOnClickListener(v -> togglePlayPause(playButton));
 
         setupTrackClickListeners();
     }
+
+    private void togglePlayPause(ImageView playButton) {
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(playButton, "alpha", 1f, 0f).setDuration(150);
+        fadeOut.start();
+
+        fadeOut.addListener(new AnimatorListenerAdapter() {
+
+            public void onAnimationEnd(Animator animation) {
+                if (isPlaying) {
+                    playButton.setImageResource(R.mipmap.play);
+                } else {
+                    playButton.setImageResource(R.mipmap.pause);
+                }
+
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(playButton, "alpha", 0f, 1f).setDuration(150);
+                fadeIn.start();
+            }
+        });
+
+        isPlaying = !isPlaying; // Обновляем состояние
+    }
+
 
 
     private void setupTrackClickListeners() {
