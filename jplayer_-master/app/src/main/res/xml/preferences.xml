@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Настройки для включения/выключения повтора -->
+    <SwitchPreferenceCompat
+        android:key="repeat_mode"
+        android:title="Repeat Mode"
+        android:summary="Enable or disable repeat mode"
+        android:defaultValue="false"
+        android:enabled="true" />
+
+    <!-- Настройки для включения/выключения случайного воспроизведения -->
+    <SwitchPreferenceCompat
+        android:key="shuffle_mode"
+        android:title="Shuffle Mode"
+        android:summary="Enable or disable shuffle mode"
+        android:defaultValue="false"
+        android:enabled="true" />
+
+    <!-- Настройки для выбора темы -->
+    <ListPreference
+        android:key="theme"
+        android:title="Theme"
+        android:summary="Choose a theme for the player"
+        android:defaultValue="light"
+        android:entries="@array/theme_names"
+        android:entryValues="@array/theme_values" />
+
+</PreferenceScreen>

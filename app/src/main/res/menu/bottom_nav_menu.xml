@@ -1,15 +1,19 @@
-<!-- res/menu/bottom_nav_menu.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
-        android:id="@+id/home"
-        android:icon="@mipmap/home_on"
-        android:title="Home" />
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
     <item
-        android:id="@+id/media"
-        android:icon="@mipmap/media_open"
-        android:title="Media" />
+        android:id="@+id/navigation_media"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_media" />
+
     <item
-        android:id="@+id/plus"
-        android:icon="@mipmap/plus"
-        android:title="Add" />
+        android:id="@+id/navigation_add_new"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_add_new" />
+
 </menu>

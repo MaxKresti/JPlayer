@@ -15,7 +15,7 @@
         android:focusable="true"
         android:contentDescription="track"
         android:scaleType="fitXY"
-        android:src="@mipmap/image" />
+        android:src="@drawable/image" />
 
     <!-- Контейнер для названия трека и автора -->
     <LinearLayout
@@ -28,7 +28,6 @@
         <!-- Название трека -->
         <TextView
             android:id="@+id/albumName"
-            android:fontFamily="@font/kodchasan"
             android:textSize="24dp"
             android:clickable="true"
             android:focusable="true"
@@ -41,7 +40,6 @@
         <!-- Автор трека -->
         <TextView
             android:id="@+id/albumAuthor"
-            android:fontFamily="@font/kodchasan"
             android:textSize="16dp"
             android:textColor="#FFFFFF"
             android:clickable="true"
@@ -63,5 +61,5 @@
         android:focusable="true"
         android:contentDescription="context"
         android:scaleType="fitXY"
-        android:src="@mipmap/three" />
+        android:src="@drawable/three" />
 </LinearLayout>

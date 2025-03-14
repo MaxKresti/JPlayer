@@ -1,5 +1,10 @@
-<!-- res/drawable/bottom_nav_colors.xml -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="#9C27B0" android:state_checked="true" /> <!-- Активный цвет -->
-    <item android:color="#A0A0A0" /> <!-- Неактивный цвет -->
-</selector>
+<resources>
+    <!-- Базовый стиль для BottomNavigationView -->
+    <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
+        <!-- Цвет фона -->
+        <item name="android:background">#272727</item> <!-- Темно-серый цвет -->
+        <!-- Цвет иконок и текста -->
+        <item name="itemIconTint">@drawable/bottom_nav_colors</item>
+        <item name="itemTextColor">@drawable/bottom_nav_colors</item>
+    </style>
+</resources>
