@@ -3,8 +3,23 @@
     <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
         <!-- Цвет фона -->
         <item name="android:background">#272727</item>
-
         <item name="itemIconTint">@drawable/bottom_nav_colors</item>
         <item name="itemTextColor">@drawable/bottom_nav_colors</item>
     </style>
+
+    <style name="PopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    </style>
+
+    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+
+
 </resources>

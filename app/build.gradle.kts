@@ -1,5 +1,3 @@
-
-
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -47,6 +45,7 @@ dependencies {
     implementation(libs.legacy.support.v4)
     implementation(libs.activity)
     implementation(libs.annotation)
+    implementation(libs.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -54,4 +53,6 @@ dependencies {
     // Добавляем зависимости для Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation ("com.google.android.material:material:1.11.0")
+
 }

@@ -2,15 +2,16 @@ package com.example.jplayer;
 
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.jplayer.databinding.ActivityMainBinding;
+import com.example.jplayer.ui.MiniPlayerFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,5 +41,31 @@ public class MainActivity extends AppCompatActivity {
 
         // Связывание BottomNavigationView с NavController
         NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    /**
+     * Показывает мини-плеер.
+     */
+    public void showMiniPlayer() {
+        // Создаем экземпляр MiniPlayerFragment
+        MiniPlayerFragment miniPlayerFragment = new MiniPlayerFragment();
+
+        // Отображение мини-плеера
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.miniPlayerContainer, miniPlayerFragment)
+                .commit();
+    }
+
+    /**
+     * Скрывает мини-плеер.
+     */
+    public void hideMiniPlayer() {
+        // Удаляем мини-плеер
+        Fragment miniPlayerFragment = getSupportFragmentManager().findFragmentById(R.id.miniPlayerContainer);
+        if (miniPlayerFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(miniPlayerFragment)
+                    .commit();
+        }
     }
 }
