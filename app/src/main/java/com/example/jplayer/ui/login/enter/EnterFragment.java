@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.enter;
+package com.example.jplayer.ui.login.enter;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +10,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.jplayer.database.DatabaseHelper;
+import com.example.jplayer.database.AppDatabase;
+
+import com.example.jplayer.database.user.User;
 import com.example.jplayer.databinding.FragmentEnterBinding;
-import com.example.jplayer.ui.LoginActivity;
+import com.example.jplayer.ui.login.LoginActivity;
 import com.example.jplayer.MainActivity;
+import com.example.jplayer.ui.login.ForgotPasswordFragment;
 
 public class EnterFragment extends Fragment {
 
-    private FragmentEnterBinding binding; //
+    private FragmentEnterBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,7 +28,7 @@ public class EnterFragment extends Fragment {
 
         binding.loginButton.setOnClickListener(v -> processLogin());
         binding.registerButton.setOnClickListener(v -> ((LoginActivity) requireActivity()).navigateToRegistration());
-        binding.authorName.setOnClickListener(v -> ((LoginActivity) requireActivity()).loadFragment(new com.example.jplayer.ui.enter.ForgotPasswordFragment(), true));
+        binding.authorName.setOnClickListener(v -> ((LoginActivity) requireActivity()).loadFragment(new ForgotPasswordFragment(), true));
 
         return binding.getRoot();
     }
@@ -35,8 +38,10 @@ public class EnterFragment extends Fragment {
         String password = binding.passwordInput.getText().toString().trim();
 
         if (validateInput(username, password)) {
-            DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
-            if (dbHelper.checkCredentials(username, password)) {
+            AppDatabase db = AppDatabase.getInstance(requireContext());
+            User user = db.userDao().getUser(username, password);
+
+            if (user != null) {
                 startActivity(new Intent(requireActivity(), MainActivity.class));
                 requireActivity().finish();
             } else {

@@ -46,13 +46,17 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.annotation)
     implementation(libs.recyclerview)
+
+    implementation(libs.firebase.firestore)
+    implementation(libs.room.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Добавляем зависимости для Navigation Component
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-    implementation ("com.google.android.material:material:1.11.0")
+
+    implementation (libs.androidx.navigation.fragment)
+    implementation (libs.androidx.navigation.ui)
+    annotationProcessor(libs.room.compiler)
+
 
 }

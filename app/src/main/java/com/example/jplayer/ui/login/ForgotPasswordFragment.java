@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.enter;
+package com.example.jplayer.ui.login;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.jplayer.database.DatabaseHelper;
+import com.example.jplayer.database.AppDatabase;
+import com.example.jplayer.database.user.User;
 import com.example.jplayer.databinding.FragmentForgotPasswordBinding;
-import com.example.jplayer.ui.LoginActivity;
 
 public class ForgotPasswordFragment extends Fragment {
     private FragmentForgotPasswordBinding binding;
@@ -32,9 +32,14 @@ public class ForgotPasswordFragment extends Fragment {
         String answer = binding.etSecretAnswer.getText().toString().trim();
 
         if (validateInput(username, newPassword, answer)) {
-            DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
-            if (dbHelper.validateSecretAnswer(username, answer)) {
-                if (dbHelper.updatePassword(username, newPassword)) {
+            AppDatabase db = AppDatabase.getInstance(requireContext());
+            User user = db.userDao().validateSecretAnswer(username, answer);
+
+            if (user != null) {
+                user.password = newPassword;
+                int result = db.userDao().update(user);
+
+                if (result > 0) {
                     Toast.makeText(requireContext(), "Пароль успешно изменен!", Toast.LENGTH_SHORT).show();
                     ((LoginActivity) requireActivity()).navigateToEnter();
                 } else {

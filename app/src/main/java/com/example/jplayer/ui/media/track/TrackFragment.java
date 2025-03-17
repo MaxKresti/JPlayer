@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.track;
+package com.example.jplayer.ui.media.track;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.jplayer.MainActivity; // Импорт MainActivity
 import com.example.jplayer.R;
 import com.example.jplayer.databinding.FragmentTrackBinding; // Импорт сгенерированного Binding-класса
-import com.example.jplayer.ui.MiniPlayerFragment;
+
 
 public class TrackFragment extends Fragment {
 

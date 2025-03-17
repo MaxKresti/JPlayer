@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.Registration;
+package com.example.jplayer.ui.login.Registration;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,9 +9,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.jplayer.database.DatabaseHelper;
+import com.example.jplayer.database.AppDatabase;
+
+import com.example.jplayer.database.user.User;
 import com.example.jplayer.databinding.FragmentRegistrationBinding;
-import com.example.jplayer.ui.LoginActivity;
+import com.example.jplayer.ui.login.LoginActivity;
+
 
 public class RegistrationFragment extends Fragment {
     private FragmentRegistrationBinding binding;
@@ -21,7 +24,6 @@ public class RegistrationFragment extends Fragment {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false);
 
         binding.back.setOnClickListener(v -> ((LoginActivity) requireActivity()).navigateToEnter());
-
         binding.registerButton.setOnClickListener(v -> processRegistration());
 
         return binding.getRoot();
@@ -31,14 +33,25 @@ public class RegistrationFragment extends Fragment {
         String username = binding.nameInput.getText().toString().trim();
         String password = binding.passwordInput.getText().toString().trim();
         String secretAnswer = binding.secretAnswerInput.getText().toString().trim();
+        String secretQuestion = "Ваше любимое блюдо?";
 
         if (validateInput(username, password, secretAnswer)) {
-            DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
-            if (dbHelper.registerUser(username, password, secretAnswer)) {
+            AppDatabase db = AppDatabase.getInstance(requireContext());
+
+            // Проверка существования пользователя
+            if (db.userDao().checkUsernameExists(username) > 0) {
+                Toast.makeText(requireContext(), "Пользователь уже существует!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Создание и сохранение пользователя
+            User newUser = new User(username, password, secretQuestion, secretAnswer);
+            try {
+                db.userDao().insert(newUser);
                 Toast.makeText(requireContext(), "Регистрация успешна!", Toast.LENGTH_SHORT).show();
                 ((LoginActivity) requireActivity()).navigateToEnter();
-            } else {
-                Toast.makeText(requireContext(), "Пользователь уже существует!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(requireContext(), "Ошибка регистрации: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }

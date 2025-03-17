@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.playlist;
+package com.example.jplayer.ui.media.playlist;
 
 import androidx.lifecycle.ViewModel;
 

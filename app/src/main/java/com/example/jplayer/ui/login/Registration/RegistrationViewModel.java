@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.Registration;
+package com.example.jplayer.ui.login.Registration;
 
 import androidx.lifecycle.ViewModel;
 

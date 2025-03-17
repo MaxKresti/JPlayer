@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/enterFragment"> <!-- Стартовый фрагмент -->
+    app:startDestination="@id/enterFragment">
 
-    <!-- Фрагмент входа -->
+    <!-- Первый фрагмент -->
     <fragment
         android:id="@+id/enterFragment"
-        android:name="com.example.jplayer.ui.enter.EnterFragment"
-        android:label="Вход"
-        tools:layout="@layout/fragment_enter">
-
-        <!-- Переход на фрагмент регистрации -->
-
+        android:name="com.example.ui.enter.EnterFragment"
+        android:label="Вход">
+        <action
+            android:id="@+id/action_enter_to_registration"
+            app:destination="@id/registrationFragment" />
     </fragment>
 
-    <!-- Фрагмент регистрации -->
+    <!-- Второй фрагмент -->
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.example.jplayer.ui.Registration.RegistrationFragment"
-        android:label="Регистрация"
-        tools:layout="@layout/fragment_registration" />
+        android:name="com.example.ui.Registration.RegistrationFragment"
+        android:label="Регистрация" />
+
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.playlist;
+package com.example.jplayer.ui.media.playlist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

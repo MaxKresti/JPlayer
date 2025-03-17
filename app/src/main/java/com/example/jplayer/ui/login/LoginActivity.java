@@ -1,4 +1,4 @@
-package com.example.jplayer.ui;
+package com.example.jplayer.ui.login;
 
 import android.os.Bundle;
 
@@ -8,9 +8,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.jplayer.R;
-import com.example.jplayer.ui.enter.EnterFragment;
-import com.example.jplayer.ui.Registration.RegistrationFragment;
-import com.example.jplayer.ui.enter.ForgotPasswordFragment;
+import com.example.jplayer.ui.login.enter.EnterFragment;
+import com.example.jplayer.ui.login.Registration.RegistrationFragment;
+
 
 public class LoginActivity extends AppCompatActivity {
 

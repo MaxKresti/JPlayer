@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.track;
+package com.example.jplayer.ui.media.track;
 
 import androidx.lifecycle.ViewModel;
 

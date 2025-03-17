@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.enter;
+package com.example.jplayer.ui.login.enter;
 
 import androidx.lifecycle.ViewModel;
 

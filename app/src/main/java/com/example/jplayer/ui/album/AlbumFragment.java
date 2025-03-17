@@ -1,24 +1,17 @@
 package com.example.jplayer.ui.album;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.jplayer.R;
-import com.example.jplayer.ui.playlist.PlaylistMenuSheetDialogFragment;
 
 public class AlbumFragment extends Fragment {
 

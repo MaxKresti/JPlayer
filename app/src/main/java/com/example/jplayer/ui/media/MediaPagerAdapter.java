@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.jplayer.ui.album.AlbumFragment;
-import com.example.jplayer.ui.playlist.PlaylistFragment;
-import com.example.jplayer.ui.track.TrackFragment;
+import com.example.jplayer.ui.media.playlist.PlaylistFragment;
+import com.example.jplayer.ui.media.track.TrackFragment;
 
 public class MediaPagerAdapter extends FragmentStateAdapter {
 

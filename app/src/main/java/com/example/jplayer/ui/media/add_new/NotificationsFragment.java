@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.add_new;
+package com.example.jplayer.ui.media.add_new;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
