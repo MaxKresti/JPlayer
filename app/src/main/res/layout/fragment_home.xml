@@ -7,6 +7,7 @@
     android:background="#272727"
     tools:context=".ui.home.HomeFragment">
 
+
     <!-- Основной контент -->
     <LinearLayout
         android:id="@+id/main_content"
@@ -104,6 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
 
+<<<<<<< HEAD
                 <!-- Title -->
                 <TextView
                     android:id="@+id/last"
@@ -238,6 +240,15 @@
                             android:layout_width="150dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp">
+=======
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </HorizontalScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+>>>>>>> 6e75d9b8bf9144915362460e49078d059f5c8f13
 
                             <include
                                 layout="@layout/main_track"

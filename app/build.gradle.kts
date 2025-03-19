@@ -58,4 +58,7 @@ dependencies {
     annotationProcessor(libs.room.compiler)
 
 
+    implementation (libs.androidx.media)
+    implementation (libs.androidx.documentfile)
+    implementation (libs.androidx.recyclerview.v132)
 }
