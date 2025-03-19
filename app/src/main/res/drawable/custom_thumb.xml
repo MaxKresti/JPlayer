@@ -1,0 +1,14 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Основной ползунок -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#EC0EFF" /> <!-- Цвет ползунка (зеленый, как в Spotify) -->
+            <size
+                android:width="16dp"
+            android:height="16dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#FFFFFF" /> <!-- Обводка -->
+        </shape>
+    </item>
+</layer-list>

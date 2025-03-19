@@ -40,12 +40,7 @@ public class AlbumFragment extends Fragment {
         }
     }
 
-    /**
-     * Показывает контекстное меню для альбома.
-     *
-     * @param anchorView View, к которому привязывается меню (кнопка с тремя точками).
-     * @param position   Позиция альбома в списке.
-     */
+
     private void showContextMenu(View anchorView, int position) {
         AlbumMenuSheetDialogFragment bottomSheet = new AlbumMenuSheetDialogFragment();
         bottomSheet.setPosition(position);

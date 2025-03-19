@@ -46,7 +46,6 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.annotation)
     implementation(libs.recyclerview)
-
     implementation(libs.firebase.firestore)
     implementation(libs.room.runtime)
     testImplementation(libs.junit)
