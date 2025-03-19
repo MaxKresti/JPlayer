@@ -7,6 +7,7 @@
     android:background="#272727"
     tools:context=".ui.home.HomeFragment">
 
+
     <!-- Основной контент -->
     <LinearLayout
         android:id="@+id/main_content"
@@ -110,54 +111,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:fillViewport="true">
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tracksContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Пример треков -->
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/lay_last"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp">
-
-                        <include
-                            layout="@layout/main_track"
-                            android:id="@+id/track1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/lay_last_2"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp">
-
-                        <include
-                            layout="@layout/main_track"
-                            android:id="@+id/track2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/lay_last_3"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp">
-
-                        <include
-                            layout="@layout/main_track"
-                            android:id="@+id/track3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </LinearLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </HorizontalScrollView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

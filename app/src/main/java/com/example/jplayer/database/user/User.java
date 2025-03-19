@@ -11,16 +11,16 @@ public class User {
     public int id;
 
     @ColumnInfo(name = "username")
-    public String username;
+    public      String  username;
 
     @ColumnInfo(name = "password")
-    public String password;
+    public      String  password;
 
     @ColumnInfo(name = "secret_question")
-    public String secretQuestion;
+    public      String  secretQuestion;
 
     @ColumnInfo(name = "secret_answer")
-    public String secretAnswer;
+    public      String  secretAnswer;
 
     public User(String username, String password, String secretQuestion, String secretAnswer) {
         this.username = username;

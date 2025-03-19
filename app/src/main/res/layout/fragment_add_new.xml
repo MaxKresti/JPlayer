@@ -41,14 +41,15 @@ android:id="@+id/add_track"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_marginBottom="40dp"
-android:orientation="horizontal">
+android:orientation="horizontal"
+android:clickable="true"
+    android:focusable="true">
 
 <ImageView
     android:id="@+id/new_track"
     android:layout_width="60dp"
     android:layout_height="60dp"
-    android:clickable="true"
-    android:focusable="true"
+
     android:contentDescription="add_new_track"
     android:layout_marginEnd="16dp"
     android:background="@drawable/new_track" />
@@ -58,8 +59,7 @@ android:orientation="horizontal">
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:clickable="true"
-    android:focusable="true"
+
     android:contentDescription="add_new_track"
     android:text="Add new track"
     android:textColor="#FFFFFF"
