@@ -2,7 +2,6 @@ package com.example.jplayer;
 
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -12,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.jplayer.databinding.ActivityMainBinding;
 import com.example.jplayer.ui.MiniPlayerFragment;
 import com.example.jplayer.ui.FullPlayerFragment;
+import com.example.jplayer.ui.PlaylistAlbumFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
@@ -64,11 +63,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Показывает FullPlayerFragment.
+     */
     public void showFullPlayer() {
+        // Скрываем мини-плеер
+        hideMiniPlayer();
 
+        // Создаем экземпляр FullPlayerFragment
         FullPlayerFragment fullPlayerFragment = new FullPlayerFragment();
 
+        // Делаем контейнер для большого плеера видимым
         View fullPlayerContainer = findViewById(R.id.fullPlayerContainer);
         if (fullPlayerContainer != null) {
             fullPlayerContainer.setVisibility(View.VISIBLE);
@@ -77,16 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
             // Анимация для появления плеера
             fullPlayerContainer.animate()
-                    .translationY(0) 
-                    .alpha(1.0f)
-                    .setDuration(300)
+                    .translationY(0) // Перемещаем вверх
+                    .alpha(1.0f) // Увеличиваем прозрачность
+                    .setDuration(300) // Длительность анимации
                     .start();
         }
 
-        // Скрываем BottomNavigationView
+
         setBottomNavigationVisibility(false);
 
-        // Отображаем FullPlayerFragment
+        // Заменяем фрагмент
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fullPlayerContainer, fullPlayerFragment)
                 .addToBackStack(null) // Добавляем в back stack для возможности возврата
@@ -114,6 +119,70 @@ public class MainActivity extends AppCompatActivity {
                     .setDuration(300) // Длительность анимации
                     .withEndAction(() -> {
                         fullPlayerContainer.setVisibility(View.GONE); // Скрываем контейнер
+                    })
+                    .start();
+        }
+
+        // Показываем BottomNavigationView
+        setBottomNavigationVisibility(true);
+
+        // Показываем мини-плеер
+        showMiniPlayer();
+    }
+
+    /**
+     * Показывает PlaylistAlbumFragment.
+     */
+    public void showPlaylistAlbum() {
+
+        PlaylistAlbumFragment playlistAlbumFragment = new PlaylistAlbumFragment();
+
+
+        View playlistAlbumContainer = findViewById(R.id.playlistAlbumContainer);
+        if (playlistAlbumContainer != null) {
+            playlistAlbumContainer.setVisibility(View.VISIBLE);
+            playlistAlbumContainer.setTranslationY(playlistAlbumContainer.getHeight());
+            playlistAlbumContainer.setAlpha(0.0f);
+
+            // Анимация для появления фрагмента
+            playlistAlbumContainer.animate()
+                    .translationY(0) // Перемещаем вверх
+                    .alpha(1.0f) // Увеличиваем прозрачность
+                    .setDuration(300) // Длительность анимации
+                    .start();
+        }
+
+        // Скрываем BottomNavigationView
+        setBottomNavigationVisibility(false);
+
+        // Заменяем фрагмент
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.playlistAlbumContainer, playlistAlbumFragment)
+                .addToBackStack(null) // Добавляем в back stack для возможности возврата
+                .commit();
+    }
+
+    /**
+     * Скрывает PlaylistAlbumFragment.
+     */
+    public void hidePlaylistAlbum() {
+
+        Fragment playlistAlbumFragment = getSupportFragmentManager().findFragmentById(R.id.playlistAlbumContainer);
+        if (playlistAlbumFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(playlistAlbumFragment)
+                    .commit();
+        }
+
+        // Анимация для закрытия фрагмента
+        View playlistAlbumContainer = findViewById(R.id.playlistAlbumContainer);
+        if (playlistAlbumContainer != null) {
+            playlistAlbumContainer.animate()
+                    .translationY(playlistAlbumContainer.getHeight()) // Перемещаем вниз
+                    .alpha(0.0f) // Уменьшаем прозрачность
+                    .setDuration(300) // Длительность анимации
+                    .withEndAction(() -> {
+                        playlistAlbumContainer.setVisibility(View.GONE); // Скрываем контейнер
                     })
                     .start();
         }

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/play_op"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#272727"
+    tools:context=".ui.PlaylistAlbumFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <!-- Верхняя часть (изображение, название, кнопки) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="#272727">
+
+            <!-- Кнопка "Назад" -->
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="21dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="35dp"
+                android:rotation="270"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="back"
+                android:scaleType="fitXY"
+                android:src="@drawable/back" />
+
+            <!-- Изображение плейлиста -->
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:elevation="8dp"
+                android:src="@drawable/image"
+                android:layout_marginTop="-32dp"
+                app:layout_constraintTop_toBottomOf="@id/back" />
+            <!-- Панель с названием и кнопками -->
+            <LinearLayout
+                android:id="@+id/panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/buttons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+
+
+               >
+
+                    <!-- Название плейлиста -->
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="190dp"
+                        android:textSize="24dp"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="#FFFFFF"
+                        android:text="Name"
+                        android:textStyle="bold" />
+
+                    <!-- Кнопка "Remix" -->
+                    <ImageView
+                        android:id="@+id/random"
+                        android:layout_width="43dp"
+                        android:layout_height="43dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginStart="-30dp"
+                        android:scaleType="fitXY"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="remix"
+                        android:src="@drawable/remix" />
+
+                    <!-- Кнопка "Play" -->
+                    <ImageView
+                        android:id="@+id/play"
+                        android:layout_width="43dp"
+                        android:layout_height="43dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginRight="10dp"
+
+                        android:src="@drawable/play" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollViewTracks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="#272727">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Контейнер для треков -->
+                <LinearLayout
+                    android:id="@+id/tracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                    <!-- Track 1 -->
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track1" />
+
+                    <!-- Track 2 -->
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track2" />
+
+                    <!-- Track 3 -->
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track3" />
+
+                    <include
+                        layout="@layout/item_track"
+                        android:id="@+id/track4" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

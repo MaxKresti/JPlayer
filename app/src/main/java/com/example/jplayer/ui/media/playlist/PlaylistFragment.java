@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
+import com.example.jplayer.ui.PlaylistAlbumFragment;
 
 public class PlaylistFragment extends Fragment {
 
@@ -33,19 +35,20 @@ public class PlaylistFragment extends Fragment {
         for (int i = 0; i < playlistsContainer.getChildCount(); i++) {
             View playlistItem = playlistsContainer.getChildAt(i);
             ImageView playlistMenu = playlistItem.findViewById(R.id.playlistMenu);
+            ImageView playlistImage = playlistItem.findViewById(R.id.playlistImage);
 
             // Создаем финальную копию переменной i
             final int position = i;
-            playlistMenu.setOnClickListener(v -> showContextMenu(v, position)); // Теперь position effectively final
+            playlistMenu.setOnClickListener(v -> showContextMenu(v, position));
+            playlistImage.setOnClickListener(v -> openPlaylistAlbumFragment());
+        }
+    }
+    private void openPlaylistAlbumFragment() {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
         }
     }
 
-    /**
-     * Показывает контекстное меню для плейлиста.
-     *
-     * @param anchorView View, к которому привязывается меню (кнопка с тремя точками).
-     * @param position   Позиция плейлиста в списке.
-     */
     private void showContextMenu(View anchorView, int position) {
         PlaylistMenuSheetDialogFragment bottomSheet = new PlaylistMenuSheetDialogFragment();
         bottomSheet.setPosition(position);
@@ -64,4 +67,5 @@ public class PlaylistFragment extends Fragment {
         });
         bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
     }
+
 }

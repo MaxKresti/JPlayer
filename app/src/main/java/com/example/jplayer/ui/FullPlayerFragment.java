@@ -23,6 +23,7 @@ public class FullPlayerFragment extends Fragment {
     private SeekBar seekBar;
     private ImageView playPauseButton;
     private ImageView likeButton;
+    private ImageView remixButton;
     private boolean isPlaying = false; // Состояние воспроизведения
     private boolean isLiked = false; // Состояние лайка
 
@@ -91,18 +92,9 @@ public class FullPlayerFragment extends Fragment {
      * Закрывает большой плеер и возвращает мини-плеер.
      */
     private void closeFullPlayer() {
-
-        MainActivity mainActivity = (MainActivity) requireActivity();
-
-
-        backButton.animate()
-                .rotation(270)
-                .setDuration(200) // Длительность анимации
-                .withEndAction(() -> {
-
-                    mainActivity.hideFullPlayer();
-                })
-                .start();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFullPlayer();
+        }
     }
 
     /**
@@ -183,7 +175,7 @@ public class FullPlayerFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.play2); // Меняем иконку на паузу
+                playPauseButton.setImageResource(R.drawable.play3); // Меняем иконку на паузу
                 playPauseButton.startAnimation(scaleDown);
             }
 
@@ -209,7 +201,7 @@ public class FullPlayerFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.pause2); // Меняем иконку на воспроизведение
+                playPauseButton.setImageResource(R.drawable.pause3); // Меняем иконку на воспроизведение
                 playPauseButton.startAnimation(scaleDown);
             }
 
@@ -221,4 +213,6 @@ public class FullPlayerFragment extends Fragment {
         playPauseButton.startAnimation(scaleUp);
         // Здесь добавьте логику для паузы трека
     }
+
+
 }

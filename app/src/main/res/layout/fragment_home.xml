@@ -21,7 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Верхняя часть (фиксированная) -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +29,7 @@
 
             <TextView
                 android:id="@+id/label"
-                android:textSize="25sp"
+                android:textSize="40sp"
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +48,6 @@
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
 
-        <!-- Разделитель -->
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
@@ -87,181 +85,54 @@
                 android:maxLines="1"/>
         </LinearLayout>
 
-        <!-- ScrollView для секций с горизонтальными скроллерами -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-        android:fillViewport="true">
-
-        <LinearLayout
+        <!-- Последние треки -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="16dp">
 
-            <!-- Last Played Section -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/last"
+                android:textSize="32sp"
+                android:textColor="#FFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last played"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="8dp"/>
+
+
+            <HorizontalScrollView
+                android:id="@+id/scroller_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                app:layout_constraintTop_toBottomOf="@id/last"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fillViewport="true">
 
-<<<<<<< HEAD
-                <!-- Title -->
-                <TextView
-                    android:id="@+id/last"
-                    android:textSize="32dp"
-                    android:textColor="#FFFFFF"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Last played"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginBottom="8dp"/>
-
-                <!-- Horizontal Scroll View -->
-                <HorizontalScrollView
-                    android:id="@+id/scroller_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/last"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <!-- Example Track Items -->
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/lay_last"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp">
-
-                            <include
-                                layout="@layout/main_track"
-                                android:id="@+id/track1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <!-- Repeat for other tracks -->
-                    </LinearLayout>
-                </HorizontalScrollView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- Recommendations Section -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/lay_rec"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <!-- Title -->
-                <TextView
-                    android:id="@+id/recs"
-                    android:textSize="32dp"
-                    android:textColor="#FFFFFF"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recommendations"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginBottom="8dp"/>
-
-                <!-- Horizontal Scroll View -->
-                <HorizontalScrollView
-                    android:id="@+id/scroller_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/recs"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <!-- Example Track Items -->
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp">
-
-                            <include
-                                android:id="@+id/track2"
-                                layout="@layout/main_track"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <!-- Repeat for other tracks -->
-                    </LinearLayout>
-                </HorizontalScrollView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- New and Added Section -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/lay_new"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <!-- Title -->
-                <TextView
-                    android:id="@+id/new_and_add"
-                    android:textSize="32dp"
-                    android:textColor="#FFFFFF"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New and Added"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginBottom="8dp"/>
-
-                <!-- Horizontal Scroll View -->
-                <HorizontalScrollView
-                    android:id="@+id/scroller_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/new_and_add"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <!-- Example Track Items -->
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp">
-=======
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/tracksContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </HorizontalScrollView>
+            <include
+                layout="@layout/mini_player"
+                android:id="@+id/miniPlayer1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
->>>>>>> 6e75d9b8bf9144915362460e49078d059f5c8f13
+        <include
+            layout="@layout/mini_player"
+            android:id="@+id/miniPlayer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </LinearLayout>
 
-                            <include
-                                layout="@layout/main_track"
-                                android:id="@+id/track3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <!-- Repeat for other tracks -->
-                    </LinearLayout>
-                </HorizontalScrollView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

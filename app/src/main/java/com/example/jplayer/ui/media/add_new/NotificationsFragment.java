@@ -11,18 +11,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.jplayer.R;
 import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.FragmentAddNewBinding;
+
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 
 public class NotificationsFragment extends Fragment {
 
@@ -40,9 +47,37 @@ public class NotificationsFragment extends Fragment {
         db = AppDatabase.getInstance(requireContext());
         currentUserId = getCurrentUserId();
 
+        // Настройка анимации для ImageView
+        setupImageAnimation(binding.newTrack);
+        setupImageAnimation(binding.newAlbum);
+        setupImageAnimation(binding.newPlaylist);
+
+        // Обработчик нажатия на кнопку добавления трека
         binding.addTrack.setOnClickListener(v -> openFileChooser());
 
         return root;
+    }
+
+    // Метод для настройки анимации ImageView
+    private void setupImageAnimation(ImageView imageView) {
+        Animation scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.smaller);
+        Animation scaleUp = AnimationUtils.loadAnimation(requireContext(), R.anim.bigger);
+
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.startAnimation(scaleDown);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.startAnimation(scaleUp);
+                        break;
+                }
+                return false; // Возвращаем false, чтобы не перехватывать событие
+            }
+        });
     }
 
     private void openFileChooser() {
