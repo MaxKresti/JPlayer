@@ -54,7 +54,8 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         holder.itemView.setOnClickListener(v -> {
             // Предполагается, что Activity является MainActivity
             if (context instanceof MainActivity) {
-                ((MainActivity) context).playTrack(track.filePath);
+                ((MainActivity) context).playTrack(track);
+
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.example.jplayer.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +22,12 @@ import com.example.jplayer.MainActivity;
 
 public class MiniPlayerFragment extends Fragment {
 
-    private boolean isPlaying = false; // По умолчанию трек не играет
     private ImageButton playPauseButton;
+    private ImageView trackCover;
+    private TextView trackTitle;
+    private TextView trackArtist;
+    private boolean isPlaying = false;
     private ExoPlayer exoPlayer;
-
-
 
     @Nullable
     @Override
@@ -31,103 +35,110 @@ public class MiniPlayerFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mini_player, container, false);
 
-        // Находим фото трека
-        ImageView trackCover = view.findViewById(R.id.trackCover);
+        // Инициализация UI элементов
+        trackCover = view.findViewById(R.id.trackCover);
+        trackTitle = view.findViewById(R.id.trackTitle);
+        trackArtist = view.findViewById(R.id.trackArtist);
+        playPauseButton = view.findViewById(R.id.playPauseButton);
 
-        // Обработка клика на фото
-        if (trackCover != null) {
-            trackCover.setOnClickListener(v -> openFullPlayer());
+        // Если переданы данные о треке через аргументы, устанавливаем их
+        Bundle args = getArguments();
+        if (args != null) {
+            String title = args.getString("title");
+            String artist = args.getString("artist");
+            String coverArt = args.getString("coverArt");
+
+            trackTitle.setText(title);
+            trackArtist.setText(artist);
+            if (coverArt != null && !coverArt.isEmpty()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(coverArt);
+                if (bitmap != null) {
+                    trackCover.setImageBitmap(bitmap);
+                }
+            }
         }
+
+        // Обработка клика по обложке: открываем полноэкранный плеер
+        trackCover.setOnClickListener(v -> openFullPlayer());
 
         // Получаем ExoPlayer из MainActivity
         if (getActivity() instanceof MainActivity) {
             exoPlayer = ((MainActivity) getActivity()).getExoPlayer();
         }
 
-        // Инициализация кнопки воспроизведения/паузы
-        playPauseButton = view.findViewById(R.id.playPauseButton);
+        // Обработка клика по кнопке play/pause
         playPauseButton.setOnClickListener(v -> togglePlayPause());
 
         return view;
     }
 
     /**
-     * Переключение между воспроизведением и паузой.
+     * Переключает воспроизведение и паузу с анимацией.
      */
     private void togglePlayPause() {
         if (exoPlayer == null) return;
         if (exoPlayer.isPlaying()) {
+            pauseWithAnimation();
             exoPlayer.pause();
             isPlaying = false;
-            updatePlayPauseIcon();
         } else {
+            playWithAnimation();
             exoPlayer.play();
             isPlaying = true;
-            updatePlayPauseIcon();
         }
     }
 
-    private void updatePlayPauseIcon() {
-        if (isPlaying) {
-            playPauseButton.setImageResource(R.drawable.pause2);
-        } else {
-            playPauseButton.setImageResource(R.drawable.play2);
-        }
-    }
-
-    private void playTrack() {
-        isPlaying = true;
-        // Анимация смены иконки
+    /**
+     * Выполняет анимацию при начале воспроизведения.
+     */
+    private void playWithAnimation() {
         Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
         Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
 
         scaleUp.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) { }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.play2); // Меняем иконку на паузу
+                // При воспроизведении устанавливаем иконку, обозначающую состояние "пауза"
+                playPauseButton.setImageResource(R.drawable.pause2);
                 playPauseButton.startAnimation(scaleDown);
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) { }
         });
-
         playPauseButton.startAnimation(scaleUp);
-        // Здесь добавьте логику для начала воспроизведения трека
     }
 
-    private void pauseTrack() {
-        isPlaying = false;
-        // Анимация смены иконки
+    /**
+     * Выполняет анимацию при постановке на паузу.
+     */
+    private void pauseWithAnimation() {
         Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
         Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
 
         scaleUp.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) { }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.pause2); // Меняем иконку на воспроизведение
+                // При паузе устанавливаем иконку, обозначающую состояние "воспроизведение"
+                playPauseButton.setImageResource(R.drawable.play2);
                 playPauseButton.startAnimation(scaleDown);
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) { }
         });
-
         playPauseButton.startAnimation(scaleUp);
-        // Здесь добавьте логику для паузы трека
     }
 
-
+    /**
+     * Открывает полноэкранный плеер через MainActivity.
+     */
     private void openFullPlayer() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).showFullPlayer();

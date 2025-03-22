@@ -11,6 +11,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.ActivityMainBinding;
 import com.example.jplayer.ui.MiniPlayerFragment;
 import com.example.jplayer.ui.FullPlayerFragment;
@@ -51,15 +53,16 @@ public class MainActivity extends AppCompatActivity {
      * Метод для воспроизведения трека по указанному пути.
      * Вызывается, например, из адаптера при нажатии на элемент.
      */
-    public void playTrack(String filePath) {
-        Uri uri = Uri.parse(filePath);
+    public void playTrack(Song song) {
+        // Пример: установка медиа айтема и запуск плеера
+        Uri uri = Uri.parse(song.filePath);
         MediaItem mediaItem = MediaItem.fromUri(uri);
         exoPlayer.setMediaItem(mediaItem);
         exoPlayer.prepare();
         exoPlayer.play();
 
-        // Показываем мини-плеер
-        showMiniPlayer();
+        // Показываем мини-плеер и передаем данные о треке через Bundle
+        showMiniPlayer(song);
     }
 
     /**
@@ -72,10 +75,23 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Показывает мини-плеер.
      */
-    public void showMiniPlayer() {
+    public void showMiniPlayer(Song song) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", song.title);
+        bundle.putString("artist", song.artist);
+        bundle.putString("coverArt", song.coverArt);
+
         MiniPlayerFragment miniPlayerFragment = new MiniPlayerFragment();
+        miniPlayerFragment.setArguments(bundle);
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.miniPlayerContainer, miniPlayerFragment)
+                .commit();
+    }
+
+    public void showMiniPlayer() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.miniPlayerContainer, new MiniPlayerFragment())
                 .commit();
     }
 
