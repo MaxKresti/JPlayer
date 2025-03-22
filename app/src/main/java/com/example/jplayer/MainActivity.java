@@ -2,10 +2,13 @@ package com.example.jplayer;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,15 +22,19 @@ import com.example.jplayer.ui.FullPlayerFragment;
 import com.example.jplayer.ui.PlaylistAlbumFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private ExoPlayer exoPlayer;
 
+    private ExoPlayer exoPlayer;
+    private Song currentSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -35,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         exoPlayer = new ExoPlayer.Builder(this).build();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
@@ -47,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        exoPlayer.addListener(new Player.Listener() {
+            @Override
+            public void onPlayerError(PlaybackException error) {
+                Log.e("ExoPlayerError", "Ошибка воспроизведения: " + error.getMessage());
+            }
+        });
     }
 
     /**
@@ -54,16 +69,34 @@ public class MainActivity extends AppCompatActivity {
      * Вызывается, например, из адаптера при нажатии на элемент.
      */
     public void playTrack(Song song) {
-        // Пример: установка медиа айтема и запуск плеера
-        Uri uri = Uri.parse(song.filePath);
+        currentSong = song;
+
+        if (exoPlayer.isPlaying()) {
+            exoPlayer.stop();
+        }
+        exoPlayer.clearMediaItems();
+
+        // Проверьте существование файла (для отладки)
+        File file = new File(song.filePath);
+        if (!file.exists()) {
+            Log.e("playTrack", "Файл не существует: " + song.filePath);
+        }
+
+        // Создаём URI, используя fromFile если необходимо
+        Uri uri = file.exists() ? Uri.fromFile(file) : Uri.parse(song.filePath);
+
         MediaItem mediaItem = MediaItem.fromUri(uri);
         exoPlayer.setMediaItem(mediaItem);
         exoPlayer.prepare();
+        exoPlayer.seekTo(0);
         exoPlayer.play();
 
-        // Показываем мини-плеер и передаем данные о треке через Bundle
         showMiniPlayer(song);
     }
+
+
+
+
 
     /**
      * Предоставляем доступ к ExoPlayer для других фрагментов.
@@ -111,41 +144,62 @@ public class MainActivity extends AppCompatActivity {
      * Показывает FullPlayerFragment.
      */
     public void showFullPlayer() {
+        // Проверяем, что currentSong не равен null
+        if (currentSong == null) {
+            Log.e("MainActivity", "currentSong is null. Невозможно открыть полноэкранный плеер.");
+            return;
+        }
+
         // Скрываем мини-плеер
         hideMiniPlayer();
 
         // Создаем экземпляр FullPlayerFragment
         FullPlayerFragment fullPlayerFragment = new FullPlayerFragment();
 
-        // Делаем контейнер для большого плеера видимым
+        // Передаём информацию о текущем треке
+        Bundle args = new Bundle();
+        args.putString("trackName", currentSong.title);
+        args.putString("author", currentSong.artist);
+        args.putString("coverArt", currentSong.coverArt);
+        args.putLong("trackPosition", exoPlayer.getCurrentPosition());
+        fullPlayerFragment.setArguments(args);
+
+        // Анимируем контейнер для большого плеера, если он существует
         View fullPlayerContainer = findViewById(R.id.fullPlayerContainer);
         if (fullPlayerContainer != null) {
             fullPlayerContainer.setVisibility(View.VISIBLE);
             fullPlayerContainer.setTranslationY(fullPlayerContainer.getHeight());
             fullPlayerContainer.setAlpha(0.0f);
-
-            // Анимация для появления плеера
             fullPlayerContainer.animate()
-                    .translationY(0) // Перемещаем вверх
-                    .alpha(1.0f) // Увеличиваем прозрачность
-                    .setDuration(300) // Длительность анимации
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setDuration(300)
                     .start();
+        } else {
+            Log.e("MainActivity", "fullPlayerContainer не найден");
         }
 
-
+        // Скрываем нижнюю навигацию
         setBottomNavigationVisibility(false);
 
-        // Заменяем фрагмент
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fullPlayerContainer, fullPlayerFragment)
-                .addToBackStack(null) // Добавляем в back stack для возможности возврата
+        // Заменяем фрагмент в правильном контейнере, например, nav_host_fragment_activity_main
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.nav_host_fragment_activity_main, fullPlayerFragment)
+                .addToBackStack(null)
                 .commit();
     }
+
+
+
+
 
     /**
      * Скрывает FullPlayerFragment.
      */
     public void hideFullPlayer() {
+        getSupportFragmentManager().popBackStack();
         // Удаляем FullPlayerFragment
         Fragment fullPlayerFragment = getSupportFragmentManager().findFragmentById(R.id.fullPlayerContainer);
         if (fullPlayerFragment != null) {

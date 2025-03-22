@@ -5,8 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#1E1E1E"
+    android:id="@+id/mini_player"
+    android:padding="8dp"
+    android:clickable="true"
+    android:focusable="true">
 
-    android:padding="8dp">
 
     <!-- Обложка трека -->
     <ImageView
@@ -14,8 +17,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/image"
-        android:clickable="true"
-        android:focusable="true"
+
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -38,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Название трека"
-            android:clickable="true"
-            android:focusable="true"
+
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:maxLines="1"
@@ -50,8 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Исполнитель"
-            android:clickable="true"
-            android:focusable="true"
+
             android:textColor="#A0A0A0"
             android:textSize="14sp"
             android:maxLines="1"

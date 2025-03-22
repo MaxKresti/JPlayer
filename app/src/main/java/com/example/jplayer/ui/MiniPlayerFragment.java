@@ -34,6 +34,14 @@ public class MiniPlayerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mini_player, container, false);
+        View miniPlayer = view.findViewById(R.id.mini_player); // Контейнер миниплеера
+
+        miniPlayer.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).showFullPlayer();
+            }
+        });
+
 
         // Инициализация UI элементов
         trackCover = view.findViewById(R.id.trackCover);
@@ -141,7 +149,16 @@ public class MiniPlayerFragment extends Fragment {
      */
     private void openFullPlayer() {
         if (getActivity() instanceof MainActivity) {
+            Bundle bundle = new Bundle();
+            bundle.putString("trackName", trackTitle.getText().toString());
+            bundle.putString("author", trackArtist.getText().toString());
+            bundle.putLong("trackPosition", exoPlayer != null ? exoPlayer.getCurrentPosition() : 0);
+
+            FullPlayerFragment fullPlayerFragment = new FullPlayerFragment();
+            fullPlayerFragment.setArguments(bundle);
+
             ((MainActivity) getActivity()).showFullPlayer();
         }
     }
+
 }

@@ -4,93 +4,47 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jplayer.MainActivity; // Импорт MainActivity
 import com.example.jplayer.R;
-import com.example.jplayer.databinding.FragmentTrackBinding; // Импорт сгенерированного Binding-класса
+import com.example.jplayer.adapters.TrackAdapter;
+import com.example.jplayer.database.song.Song;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrackFragment extends Fragment {
+    private TrackAdapter trackAdapter;
+    private TrackViewModel trackViewModel;
 
-    private FragmentTrackBinding binding; // Используем ViewBinding
-
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        // Инициализация ViewBinding
-        binding = FragmentTrackBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_track, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout tracksContainer = binding.tracksContainer;
+        RecyclerView trackList = view.findViewById(R.id.trackList);
+        trackList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        for (int i = 0; i < tracksContainer.getChildCount(); i++) {
-            View trackItem = tracksContainer.getChildAt(i);
-            ImageView trackImage = trackItem.findViewById(R.id.trackImage);
-            ImageView trackMenu = trackItem.findViewById(R.id.trackMenu);
+        trackAdapter = new TrackAdapter(getContext(), new ArrayList<>());
+        trackList.setAdapter(trackAdapter);
 
-            // Создаем финальную копию переменной i
-            final int position = i;
+        trackViewModel = new ViewModelProvider(this).get(TrackViewModel.class);
 
-            // Обработка клика на кнопку с тремя точками
-            trackMenu.setOnClickListener(v -> showContextMenu(v, position));
-
-            // Обработка клика на изображение трека
-            trackImage.setOnClickListener(v -> showMiniPlayer(position));
-
-            // Обработка клика на весь элемент трека
-            trackItem.setOnClickListener(v -> showMiniPlayer(position));
-        }
-    }
-
-    /**
-     * Показывает мини-плеер.
-     *
-     * @param position Позиция трека в списке.
-     */
-    private void showMiniPlayer(int position) {
-        // Проверяем, что активити является MainActivity
-        if (getActivity() instanceof MainActivity) {
-            // Вызываем метод showMiniPlayer() из MainActivity
-            ((MainActivity) getActivity()).showMiniPlayer();
-        }
-    }
-
-    /**
-     * Показывает контекстное меню для трека.
-     *
-     * @param anchorView View, к которому привязывается меню (кнопка с тремя точками).
-     * @param position   Позиция трека в списке.
-     */
-    private void showContextMenu(View anchorView, int position) {
-        TrackMenuSheetDialogFragment bottomSheet = new TrackMenuSheetDialogFragment();
-        bottomSheet.setPosition(position);
-        bottomSheet.setOnMenuItemClickListener(new TrackMenuSheetDialogFragment.OnMenuItemClickListener() {
-            @Override
-            public void onAddToPlaylist(int position) {
-                // Обработка добавления в плейлист
-            }
-
-            @Override
-            public void onRename(int position) {
-                // Обработка переименования
-            }
-
-            @Override
-            public void onDelete(int position) {
-                // Обработка удаления
+        int userId = 1; // Здесь можно получить ID текущего пользователя
+        trackViewModel.getSongsByUser(userId).observe(getViewLifecycleOwner(), tracks -> {
+            if (tracks != null) {
+                trackAdapter.updateTracks(tracks);
             }
         });
-        bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
     }
 }

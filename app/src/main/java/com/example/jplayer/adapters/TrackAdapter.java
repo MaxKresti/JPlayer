@@ -16,16 +16,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.database.song.Song;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
 
     private final Context context;
     public final List<Song> tracks;
+    private List<Song> trackList = new ArrayList<>();
 
     public TrackAdapter(Context context, List<Song> tracks) {
         this.context = context;
         this.tracks = tracks;
+    }
+
+    public void setTracks(List<Song> tracks) {
+        this.trackList = tracks;
+        notifyDataSetChanged();
     }
 
     @NonNull

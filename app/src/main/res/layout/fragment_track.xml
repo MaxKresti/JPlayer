@@ -45,7 +45,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-
         android:text="MY TRACKS"
         android:textColor="#FFFFFF"
         android:textSize="32dp"
@@ -80,50 +79,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/tracksContainer"
+            <!-- RecyclerView для отображения треков -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/trackList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="16dp"
-                tools:ignore="MissingConstraints">
-
-                <!-- Track 1 -->
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track1" />
-
-                <!-- Track 2 -->
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track2" />
-
-                <!-- Track 3 -->
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track3" />
-
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track4" />
-
-                <!-- Track 2 -->
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track5" />
-
-                <!-- Track 3 -->
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track6" />
-
-                <include
-                    layout="@layout/item_track"
-                    android:id="@+id/track7" />
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:overScrollMode="never"
+                tools:listitem="@layout/item_track" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
