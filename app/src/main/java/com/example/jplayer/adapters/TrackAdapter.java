@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.database.song.Song;
 import java.util.List;
@@ -50,7 +52,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
 
         // Обработчик клика
         holder.itemView.setOnClickListener(v -> {
-            // Воспроизведение трека
+            // Предполагается, что Activity является MainActivity
+            if (context instanceof MainActivity) {
+                ((MainActivity) context).playTrack(track.filePath);
+            }
         });
     }
 

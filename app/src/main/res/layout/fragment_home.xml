@@ -67,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/lupa"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
+                android:layout_width="23dp"
+                android:layout_height="24dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/lupa" />
 

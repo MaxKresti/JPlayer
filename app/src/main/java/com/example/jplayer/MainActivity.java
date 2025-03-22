@@ -1,9 +1,12 @@
 package com.example.jplayer;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.ExoPlayer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,6 +20,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private ExoPlayer exoPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        exoPlayer = new ExoPlayer.Builder(this).build();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -41,11 +48,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Метод для воспроизведения трека по указанному пути.
+     * Вызывается, например, из адаптера при нажатии на элемент.
+     */
+    public void playTrack(String filePath) {
+        Uri uri = Uri.parse(filePath);
+        MediaItem mediaItem = MediaItem.fromUri(uri);
+        exoPlayer.setMediaItem(mediaItem);
+        exoPlayer.prepare();
+        exoPlayer.play();
+
+        // Показываем мини-плеер
+        showMiniPlayer();
+    }
+
+    /**
+     * Предоставляем доступ к ExoPlayer для других фрагментов.
+     */
+    public ExoPlayer getExoPlayer() {
+        return exoPlayer;
+    }
+
+    /**
      * Показывает мини-плеер.
      */
     public void showMiniPlayer() {
         MiniPlayerFragment miniPlayerFragment = new MiniPlayerFragment();
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.miniPlayerContainer, miniPlayerFragment)
                 .commit();
@@ -202,4 +230,14 @@ public class MainActivity extends AppCompatActivity {
             navView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+    }
+
 }

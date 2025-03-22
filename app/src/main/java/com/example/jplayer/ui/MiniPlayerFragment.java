@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.media3.exoplayer.ExoPlayer;
 
 import com.example.jplayer.R;
 import com.example.jplayer.MainActivity;
@@ -20,6 +21,9 @@ public class MiniPlayerFragment extends Fragment {
 
     private boolean isPlaying = false; // По умолчанию трек не играет
     private ImageButton playPauseButton;
+    private ExoPlayer exoPlayer;
+
+
 
     @Nullable
     @Override
@@ -35,6 +39,11 @@ public class MiniPlayerFragment extends Fragment {
             trackCover.setOnClickListener(v -> openFullPlayer());
         }
 
+        // Получаем ExoPlayer из MainActivity
+        if (getActivity() instanceof MainActivity) {
+            exoPlayer = ((MainActivity) getActivity()).getExoPlayer();
+        }
+
         // Инициализация кнопки воспроизведения/паузы
         playPauseButton = view.findViewById(R.id.playPauseButton);
         playPauseButton.setOnClickListener(v -> togglePlayPause());
@@ -46,12 +55,23 @@ public class MiniPlayerFragment extends Fragment {
      * Переключение между воспроизведением и паузой.
      */
     private void togglePlayPause() {
-        if (isPlaying) {
-            // Если трек играет, ставим на паузу
-            pauseTrack();
+        if (exoPlayer == null) return;
+        if (exoPlayer.isPlaying()) {
+            exoPlayer.pause();
+            isPlaying = false;
+            updatePlayPauseIcon();
         } else {
-            // Если трек на паузе, воспроизводим
-            playTrack();
+            exoPlayer.play();
+            isPlaying = true;
+            updatePlayPauseIcon();
+        }
+    }
+
+    private void updatePlayPauseIcon() {
+        if (isPlaying) {
+            playPauseButton.setImageResource(R.drawable.pause2);
+        } else {
+            playPauseButton.setImageResource(R.drawable.play2);
         }
     }
 
@@ -109,10 +129,8 @@ public class MiniPlayerFragment extends Fragment {
 
 
     private void openFullPlayer() {
-        // Получаем экземпляр MainActivity
-        MainActivity mainActivity = (MainActivity) requireActivity();
-
-        // Вызываем метод showFullPlayer() из MainActivity
-        mainActivity.showFullPlayer();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showFullPlayer();
+        }
     }
 }
