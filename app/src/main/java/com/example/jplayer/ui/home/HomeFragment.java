@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.jplayer.R;
 import com.example.jplayer.adapters.TrackAdapter;
 import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.song.Song;
@@ -47,7 +49,8 @@ public class HomeFragment extends Fragment {
         );
 
         binding.tracksContainer.setLayoutManager(layoutManager);
-        adapter = new TrackAdapter(requireContext(), new ArrayList<>());
+        adapter = new TrackAdapter(requireContext(), new ArrayList<>(), R.layout.main_track);
+
         binding.tracksContainer.setAdapter(adapter);
     }
 
