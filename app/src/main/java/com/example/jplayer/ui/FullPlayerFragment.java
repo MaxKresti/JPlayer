@@ -1,7 +1,10 @@
 package com.example.jplayer.ui;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,8 @@ import androidx.media3.ui.PlayerView;
 import com.example.jplayer.R;
 import com.example.jplayer.MainActivity;
 
+import java.util.Locale;
+
 public class FullPlayerFragment extends Fragment {
 
     private PlayerView playerView;
@@ -29,9 +34,28 @@ public class FullPlayerFragment extends Fragment {
     private ImageView backButton, playPauseButton, likeButton, albumImageView;
     private SeekBar seekBar;
     private TextView trackNameTextView, authorTextView;
+    private TextView currentTimeTextView, durationTimeTextView;
 
     private boolean isPlaying = false;
     private boolean isLiked = false;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable updateProgressAction = new Runnable() {
+        @Override
+        public void run() {
+            if (exoPlayer != null && exoPlayer.getDuration() > 0) {
+                long currentPosition = exoPlayer.getCurrentPosition();
+                long duration = exoPlayer.getDuration();
+                // Обновляем SeekBar, предполагая, что максимальное значение = 100
+                int progress = (int) ((currentPosition * 100) / duration);
+                seekBar.setProgress(progress);
+                // Обновляем текстовые поля времени
+                currentTimeTextView.setText(formatTime(currentPosition));
+                durationTimeTextView.setText(formatTime(duration - currentPosition));
+            }
+            handler.postDelayed(this, 1000);
+        }
+    };
 
     @Nullable
     @Override
@@ -48,44 +72,76 @@ public class FullPlayerFragment extends Fragment {
         seekBar = view.findViewById(R.id.seek);
         playPauseButton = view.findViewById(R.id.pause);
         likeButton = view.findViewById(R.id.like);
-
-        if (getArguments() != null) {
-            String trackName = getArguments().getString("trackName", "Неизвестный трек");
-            String artist = getArguments().getString("author", "Неизвестный артист");
-            String coverArt = getArguments().getString("coverArt", null);
-
-//            titleTextView.setText(trackName);
-//            artistTextView.setText(artist);
-//
-//            if (coverArt != null) {
-//                Uri imageUri = Uri.parse(coverArt);
-//                coverImageView.setImageURI(imageUri);
-//            } else {
-//                coverImageView.setImageResource(R.drawable.default_cover);
-//            }
-        }
+        currentTimeTextView = view.findViewById(R.id.current);
+        durationTimeTextView = view.findViewById(R.id.duration);
 
         // Получаем ExoPlayer из MainActivity
         if (getActivity() instanceof MainActivity) {
             exoPlayer = ((MainActivity) getActivity()).getExoPlayer();
         }
 
-        // Получаем данные из Bundle
+        // Извлекаем данные из Bundle и устанавливаем UI
         Bundle args = getArguments();
         if (args != null) {
-            String trackName = args.getString("trackName");
-            String author = args.getString("author");
-            int albumImageRes = args.getInt("albumImageRes");
-            long trackPosition = args.getLong("trackPosition");
+            String trackName = args.getString("trackName", "Неизвестный трек");
+            String author = args.getString("author", "Неизвестный артист");
+            String coverArtPath = args.getString("coverArt", "");
+            long trackPosition = args.getLong("trackPosition", 0);
 
             trackNameTextView.setText(trackName);
             authorTextView.setText(author);
-            albumImageView.setImageResource(albumImageRes);
+
+            if (coverArtPath != null && !coverArtPath.isEmpty()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(coverArtPath);
+                if (bitmap != null) {
+                    albumImageView.setImageBitmap(bitmap);
+                } else {
+                    albumImageView.setImageResource(R.drawable.image);
+                }
+            } else {
+                albumImageView.setImageResource(R.drawable.image);
+            }
 
             if (exoPlayer != null) {
-                exoPlayer.seekTo(trackPosition);
+                long currentPos = exoPlayer.getCurrentPosition();
+                // Если разница больше 500 мс, тогда перематываем, иначе оставляем как есть
+                if (Math.abs(currentPos - trackPosition) > 500) {
+                    exoPlayer.seekTo(trackPosition);
+                }
             }
         }
+
+        // Устанавливаем слушатель для SeekBar
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private boolean userTouch = false;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Если изменение вызвано пользователем, рассчитываем новую позицию
+                if (fromUser && exoPlayer != null && exoPlayer.getDuration() > 0) {
+                    long duration = exoPlayer.getDuration();
+                    long newPosition = (duration * progress) / 100;
+                    currentTimeTextView.setText(formatTime(newPosition));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                userTouch = true;
+                handler.removeCallbacks(updateProgressAction);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (exoPlayer != null && exoPlayer.getDuration() > 0) {
+                    long duration = exoPlayer.getDuration();
+                    long newPosition = (duration * seekBar.getProgress()) / 100;
+                    exoPlayer.seekTo(newPosition);
+                }
+                userTouch = false;
+                handler.post(updateProgressAction);
+            }
+        });
 
         // Обработчики кликов
         backButton.setOnClickListener(v -> closeFullPlayer());
@@ -104,6 +160,13 @@ public class FullPlayerFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private String formatTime(long millis) {
+        long totalSeconds = millis / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
     }
 
     private void closeFullPlayer() {
@@ -155,7 +218,20 @@ public class FullPlayerFragment extends Fragment {
             @Override
             public void onAnimationRepeat(Animation animation) {}
         });
-
         button.startAnimation(scaleUp);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Запускаем обновление прогресса плеера
+        handler.post(updateProgressAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Останавливаем обновление прогресса, чтобы не было утечек памяти
+        handler.removeCallbacks(updateProgressAction);
     }
 }

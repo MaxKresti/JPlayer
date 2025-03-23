@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.FullPlayerFragment"
-    android:background="#272727">
+    android:background="#272727"
+    tools:context=".ui.FullPlayerFragment">
 
     <!-- Кнопка "Назад" -->
     <ImageView
@@ -15,7 +15,7 @@
         android:layout_height="30dp"
         android:src="@drawable/back"
         android:rotation="270"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         android:clickable="true"
         android:focusable="true"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -26,33 +26,41 @@
         android:layout_marginStart="16dp" />
 
     <!-- Изображение альбома -->
+
+    <!-- Название трека -->
+
+    <!-- Имя автора -->
+
     <ImageView
         android:id="@+id/album_image"
-        android:layout_width="wrap_content"
-        android:layout_height="350dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:elevation="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+
         android:src="@drawable/image"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
+        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back" />
 
-    <!-- Название трека -->
     <TextView
         android:id="@+id/trackName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="132dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
         android:text="Track Name"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/album_image"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp" />
+        app:layout_constraintTop_toBottomOf="@id/album_image" />
 
-    <!-- Имя автора -->
     <TextView
         android:id="@+id/author"
         android:layout_width="0dp"
@@ -64,24 +72,28 @@
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/trackName"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginHorizontal="16dp" />
+
     <!-- Кнопка "Лайк" -->
+
+    <!-- SeekBar (ползунок) -->
     <ImageView
         android:id="@+id/like"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/heart"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/album_image"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_marginTop="40dp"
         android:layout_marginHorizontal="16dp"
-        android:contentDescription="Лайк" />
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="Лайк"
+        android:focusable="true"
+        android:src="@drawable/heart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/album_image" />
 
-    <!-- SeekBar (ползунок) -->
     <SeekBar
         android:id="@+id/seek"
         android:layout_width="0dp"
@@ -93,7 +105,6 @@
         app:layout_constraintTop_toBottomOf="@id/author"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:maxHeight="2dp"
         android:layout_marginTop="24dp"
         android:layout_marginHorizontal="16dp" />
 
@@ -184,8 +195,7 @@
             android:contentDescription="Перемотка вперед"
             android:layout_marginHorizontal="24dp" />
 
-        <!-- Кнопка "Лайк" -->
-        <!-- Кнопка повтора -->
+        <!-- Кнопка "Повтор" -->
         <ImageView
             android:id="@+id/repeat"
             android:layout_width="30dp"
