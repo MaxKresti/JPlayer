@@ -17,38 +17,41 @@
         android:focusable="true"/>
 
     <!-- Контейнер для текста -->
+
+    <!-- Меню (три точки) -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="269dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <!-- Название плейлиста -->
         <TextView
             android:id="@+id/playlistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Playlist Name"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:clickable="true"
-            android:focusable="true"/>
+            android:ellipsize="end"
+            android:focusable="true"
+            android:maxLines="1"
+            android:text="Playlist Name"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
-    <!-- Меню (три точки) -->
     <ImageView
         android:id="@+id/playlistMenu"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="8dp"
-        android:scaleType="center"
-        android:src="@drawable/three"
-        android:contentDescription="Playlist Menu"
+        android:layout_marginTop="25dp"
         android:clickable="true"
-        android:focusable="true"/>
+        android:contentDescription="Playlist Menu"
+        android:focusable="true"
+        android:scaleType="center"
+        android:src="@drawable/three" />
 </LinearLayout>

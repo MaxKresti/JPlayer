@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.jplayer.MainActivity;
@@ -20,6 +21,7 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
 
     private RecyclerView recyclerView;
     private PlaylistAdapter adapter;
+    private PlaylistViewModel playlistViewModel;
     private int currentUserId = 1; // Получи реальный userId
 
     @Nullable
@@ -31,6 +33,11 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
 
         adapter = new PlaylistAdapter(requireContext(), this);
         recyclerView.setAdapter(adapter);
+
+        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
+        playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), playlists -> {
+            adapter.updateData(playlists);
+        });
 
         loadPlaylists();
         return view;

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.jplayer.R;
 import com.example.jplayer.database.playlist.Playlist;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Используем макет, который соответствует вашему дизайну (например, item_playlist.xml)
         View view = LayoutInflater.from(context).inflate(R.layout.item_playlist, parent, false);
         return new PlaylistViewHolder(view);
     }
@@ -47,25 +47,27 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist playlist = playlists.get(position);
-        // Устанавливаем название плейлиста (используем id "playlistName")
+
         if (holder.playlistName != null) {
             holder.playlistName.setText(playlist.name);
         } else {
             Log.e("PlaylistAdapter", "playlistName is null!");
         }
 
-        // Загружаем обложку, если она указана, иначе устанавливаем дефолтное изображение
+        // Используем Glide для загрузки изображения
         if (playlist.coverImage != null && !playlist.coverImage.isEmpty()) {
-            holder.coverImage.setImageURI(Uri.parse(playlist.coverImage));
+            Glide.with(context)
+                    .load(Uri.parse(playlist.coverImage))
+                    .placeholder(R.drawable.image)
+                    .error(R.drawable.image)
+                    .into(holder.coverImage);
         } else {
             holder.coverImage.setImageResource(R.drawable.image);
         }
 
         Log.d("PlaylistAdapter", "Binding playlist: " + playlist.name);
 
-        // Обработчик клика по изображению плейлиста
         holder.coverImage.setOnClickListener(v -> listener.onPlaylistClick(playlist.id));
-        // Обработчик клика по кнопке меню (три точки)
         holder.menuButton.setOnClickListener(v -> listener.onPlaylistMenuClick(v, position));
     }
 
@@ -80,7 +82,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
         public PlaylistViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Обратите внимание, что используем ID, как они указаны в вашем макете
+            // Убедитесь, что в item_playlist.xml установлены следующие ID:
             playlistName = itemView.findViewById(R.id.playlistName);
             coverImage = itemView.findViewById(R.id.playlistImage);
             menuButton = itemView.findViewById(R.id.playlistMenu);
