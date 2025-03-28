@@ -21,6 +21,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Выход" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,11 +36,11 @@
 
             <TextView
                 android:id="@+id/label"
-                android:textSize="40sp"
-                android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Music Player" />
+                android:text="Music Player"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp" />
 
             <ImageView
                 android:id="@+id/setting"
