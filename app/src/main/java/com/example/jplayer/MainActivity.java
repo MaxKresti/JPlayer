@@ -1,7 +1,13 @@
 package com.example.jplayer;
 
+
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +29,11 @@ import com.example.jplayer.databinding.ActivityMainBinding;
 import com.example.jplayer.ui.MiniPlayerFragment;
 import com.example.jplayer.ui.FullPlayerFragment;
 import com.example.jplayer.ui.PlaylistAlbumFragment;
+
 import com.example.jplayer.ui.setting.SettingFragment;
+
+import com.example.jplayer.ui.login.LoginActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -343,6 +353,8 @@ public class MainActivity extends AppCompatActivity {
         // Показываем BottomNavigationView
         setBottomNavigationVisibility(true);
     }
+
+
 
     @Override
     protected void onDestroy() {

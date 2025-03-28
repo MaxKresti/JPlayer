@@ -53,21 +53,24 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Кнопка входа -->
+
+    <!-- Кнопка регистрации -->
+
     <Button
         android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#FFFFFF"
         android:text="Войти"
         android:textColor="#272727"
-        android:backgroundTint="#FFFFFF"
-        android:layout_marginTop="42dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintTop_toBottomOf="@id/passwordInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/passwordInput" />
 
-    <!-- Кнопка регистрации -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="0dp"
@@ -100,6 +103,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Запомнить меня"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/passwordInput"
@@ -108,4 +112,7 @@
         android:layout_marginLeft="30dp"
         tools:layout_editor_absoluteX="43dp"
         tools:layout_editor_absoluteY="252dp" />
+
+/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
