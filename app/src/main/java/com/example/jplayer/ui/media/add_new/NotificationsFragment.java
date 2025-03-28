@@ -10,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,15 +19,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.example.jplayer.R;
 import com.example.jplayer.database.AppDatabase;
+import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.FragmentAddNewBinding;
+import com.example.jplayer.ui.CreatePlaylistDialogFragment; // Если класс находится в этом пакете, или используйте полное имя
+import androidx.appcompat.app.AlertDialog;
+// Если нужно, уточните путь
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,36 +50,44 @@ public class NotificationsFragment extends Fragment {
         db = AppDatabase.getInstance(requireContext());
         currentUserId = getCurrentUserId();
 
-        // Настройка анимации для ImageView
+        // Настройка анимации для кнопок
         setupImageAnimation(binding.newTrack);
         setupImageAnimation(binding.newAlbum);
         setupImageAnimation(binding.newPlaylist);
 
-        // Обработчик нажатия на кнопку добавления трека
+        // Обработчик для добавления трека
         binding.addTrack.setOnClickListener(v -> openFileChooser());
+        // Обработчик для создания плейлиста
+        binding.addPlaylist.setOnClickListener(v -> {
+            CreatePlaylistDialogFragment dialog = new CreatePlaylistDialogFragment();
+            dialog.setOnPlaylistCreatedListener((name, coverImagePath) -> {
+                // Создаем новый плейлист и сохраняем его в БД с учетом ID пользователя
+                Playlist playlist = new Playlist(currentUserId, name, coverImagePath);
+                AppDatabase.getInstance(requireContext()).playlistDao().insert(playlist);
+                Toast.makeText(requireContext(), "Плейлист создан: " + name, Toast.LENGTH_SHORT).show();
+            });
+            dialog.show(getChildFragmentManager(), "create_playlist_dialog");
+        });
 
         return root;
     }
 
-    // Метод для настройки анимации ImageView
+    // Метод для настройки анимации кнопок
     private void setupImageAnimation(ImageView imageView) {
         Animation scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.smaller);
         Animation scaleUp = AnimationUtils.loadAnimation(requireContext(), R.anim.bigger);
 
-        imageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        v.startAnimation(scaleDown);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        v.startAnimation(scaleUp);
-                        break;
-                }
-                return false; // Не перехватываем событие
+        imageView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.startAnimation(scaleDown);
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.startAnimation(scaleUp);
+                    break;
             }
+            return false;
         });
     }
 
@@ -122,19 +133,19 @@ public class NotificationsFragment extends Fragment {
                     !artist.isEmpty() ? artist : "Unknown Artist",
                     !album.isEmpty() ? album : "Unknown Album",
                     duration,
-                    uri.toString(),  // сохраняем URI как строку
+                    uri.toString(),
                     coverPath
             );
 
             if (db.songDao().checkSongExists(uri.toString(), currentUserId) == 0) {
                 db.songDao().insert(song);
-                showToast("Трек добавлен: " + song.title);
+                Toast.makeText(requireContext(), "Трек добавлен: " + song.title, Toast.LENGTH_SHORT).show();
             } else {
-                showToast("Трек уже существует");
+                Toast.makeText(requireContext(), "Трек уже существует", Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
-            showToast("Ошибка обработки файла");
+            Toast.makeText(requireContext(), "Ошибка обработки файла", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -179,16 +190,13 @@ public class NotificationsFragment extends Fragment {
 
     private String saveCoverArt(Bitmap bitmap) {
         if (bitmap == null) return null;
-
         try {
             File coversDir = new File(requireContext().getFilesDir(), "covers");
             if (!coversDir.exists() && !coversDir.mkdirs()) {
                 return null;
             }
-
             String fileName = "cover_" + System.currentTimeMillis() + ".png";
             File outputFile = new File(coversDir, fileName);
-
             try (FileOutputStream out = new FileOutputStream(outputFile)) {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
                 return outputFile.getAbsolutePath();
@@ -200,7 +208,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private int getCurrentUserId() {
-        // Реализация получения ID текущего пользователя (пример через SharedPreferences)
+        // Здесь ваша логика получения ID пользователя (например, из SharedPreferences)
         return 1; // Временная заглушка
     }
 

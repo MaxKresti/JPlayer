@@ -2,55 +2,53 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="16dp"> <!-- Добавлен отступ снизу для разделения элементов -->
+    android:padding="12dp"
+    android:background="?attr/selectableItemBackground">
 
-    <!-- Изображение трека -->
+    <!-- Изображение плейлиста -->
     <ImageView
         android:id="@+id/playlistImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image"
+        android:contentDescription="Playlist Image"
         android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="track"
-        android:scaleType="fitXY"
-        android:src="@drawable/image" />
+        android:focusable="true"/>
 
-    <!-- Контейнер для названия трека и автора -->
+    <!-- Контейнер для текста -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_vertical">
 
-        <!-- Название трека -->
+        <!-- Название плейлиста -->
         <TextView
             android:id="@+id/playlistName"
-            android:textSize="24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Playlist Name"
-            android:layout_marginBottom="4dp" /> <!-- Отступ снизу для разделения названия и автора -->
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <!-- Автор трека -->
-        <!-- Цвет текста для автора -->
     </LinearLayout>
 
-    <!-- Кнопка с тремя точками -->
+    <!-- Меню (три точки) -->
     <ImageView
         android:id="@+id/playlistMenu"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="center"
+        android:src="@drawable/three"
+        android:contentDescription="Playlist Menu"
         android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="context"
-        android:scaleType="fitXY"
-        android:src="@drawable/three" />
+        android:focusable="true"/>
 </LinearLayout>
