@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:clickable="true"
     android:focusable="true"
     android:layout_width="match_parent"
@@ -7,8 +6,7 @@
     android:orientation="horizontal"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-
-    android:layout_marginBottom="16dp"> <!-- Добавлен отступ снизу для разделения элементов -->
+    android:layout_marginBottom="16dp">
 
     <!-- Изображение трека -->
     <ImageView
@@ -16,7 +14,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:contentDescription="track"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/image" />
 
     <!-- Контейнер для названия трека и автора -->
@@ -30,24 +28,21 @@
         <!-- Название трека -->
         <TextView
             android:id="@+id/trackName"
-            android:textSize="24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Track Name"
-            android:layout_marginBottom="4dp" /> <!-- Отступ снизу для разделения названия и автора -->
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="4dp" />
 
         <!-- Автор трека -->
         <TextView
             android:id="@+id/trackAuthor"
-            android:textSize="16dp"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Artist Name"
-            /> <!-- Цвет текста для автора -->
+            android:textSize="14sp"
+            android:textColor="#A0A0A0" />
     </LinearLayout>
 
     <!-- Кнопка с тремя точками -->
@@ -60,6 +55,6 @@
         android:clickable="true"
         android:focusable="true"
         android:contentDescription="context"
-        android:scaleType="fitXY"
+        android:scaleType="centerInside"
         android:src="@drawable/three" />
 </LinearLayout>

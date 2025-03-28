@@ -1,6 +1,10 @@
 package com.example.jplayer.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,74 +13,153 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 
 import com.example.jplayer.R;
 import com.example.jplayer.MainActivity;
 
+import java.util.Locale;
+
 public class FullPlayerFragment extends Fragment {
 
-    private ImageView backButton;
+    private PlayerView playerView;
+    private ExoPlayer exoPlayer;
+
+    private ImageView backButton, playPauseButton, likeButton, albumImageView,remixButton;
     private SeekBar seekBar;
-    private ImageView playPauseButton;
-    private ImageView likeButton;
-    private ImageView remixButton;
-    private boolean isPlaying = false; // Состояние воспроизведения
-    private boolean isLiked = false; // Состояние лайка
+    private TextView trackNameTextView, authorTextView;
+    private TextView currentTimeTextView, durationTimeTextView;
+
+    private boolean isPlaying = false;
+    private boolean isLiked = false;
+    private boolean isRemixed = false;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable updateProgressAction = new Runnable() {
+        @Override
+        public void run() {
+            if (exoPlayer != null && exoPlayer.getDuration() > 0) {
+                long currentPosition = exoPlayer.getCurrentPosition();
+                long duration = exoPlayer.getDuration();
+                // Обновляем SeekBar, предполагая, что максимальное значение = 100
+                int progress = (int) ((currentPosition * 100) / duration);
+                seekBar.setProgress(progress);
+                // Обновляем текстовые поля времени
+                currentTimeTextView.setText(formatTime(currentPosition));
+                durationTimeTextView.setText(formatTime(duration - currentPosition));
+            }
+            handler.postDelayed(this, 1000);
+        }
+    };
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        trackNameTextView = view.findViewById(R.id.trackName);
+        setupMarquee();
+    }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Надуваем макет для большого плеера
         View view = inflater.inflate(R.layout.fragment_full_player, container, false);
 
-        // Инициализация элементов UI
+        // Инициализация UI элементов
+        trackNameTextView = view.findViewById(R.id.trackName);
+        authorTextView = view.findViewById(R.id.author);
+        albumImageView = view.findViewById(R.id.album_image);
         backButton = view.findViewById(R.id.back);
         seekBar = view.findViewById(R.id.seek);
         playPauseButton = view.findViewById(R.id.pause);
         likeButton = view.findViewById(R.id.like);
+        currentTimeTextView = view.findViewById(R.id.current);
+        durationTimeTextView = view.findViewById(R.id.duration);
+        remixButton = view.findViewById(R.id.remix);
 
-        // Обработка клика на кнопку "Назад"
-        backButton.setOnClickListener(v -> closeFullPlayer());
+        // Получаем ExoPlayer из MainActivity
+        if (getActivity() instanceof MainActivity) {
+            exoPlayer = ((MainActivity) getActivity()).getExoPlayer();
+        }
 
-        // Обработка клика на кнопку воспроизведения/паузы
-        playPauseButton.setOnClickListener(v -> togglePlayPause());
+        // Извлекаем данные из Bundle и устанавливаем UI
+        Bundle args = getArguments();
+        if (args != null) {
+            String trackName = args.getString("trackName", "Неизвестный трек");
+            String author = args.getString("author", "Неизвестный артист");
+            String coverArtPath = args.getString("coverArt", "");
+            long trackPosition = args.getLong("trackPosition", 0);
 
-        // Обработка клика на кнопку "Лайк"
-        likeButton.setOnClickListener(v -> toggleLike());
+            trackNameTextView.setText(trackName);
+            authorTextView.setText(author);
 
-        // Настройка SeekBar
+            if (coverArtPath != null && !coverArtPath.isEmpty()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(coverArtPath);
+                if (bitmap != null) {
+                    albumImageView.setImageBitmap(bitmap);
+                } else {
+                    albumImageView.setImageResource(R.drawable.image);
+                }
+            } else {
+                albumImageView.setImageResource(R.drawable.image);
+            }
+
+            if (exoPlayer != null) {
+                long currentPos = exoPlayer.getCurrentPosition();
+                // Если разница больше 500 мс, тогда перематываем, иначе оставляем как есть
+                if (Math.abs(currentPos - trackPosition) > 500) {
+                    exoPlayer.seekTo(trackPosition);
+                }
+            }
+        }
+
+
+        // Устанавливаем слушатель для SeekBar
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private boolean userTouch = false;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    // Логика перемотки трека (если нужно)
+                // Если изменение вызвано пользователем, рассчитываем новую позицию
+                if (fromUser && exoPlayer != null && exoPlayer.getDuration() > 0) {
+                    long duration = exoPlayer.getDuration();
+                    long newPosition = (duration * progress) / 100;
+                    currentTimeTextView.setText(formatTime(newPosition));
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // Логика при начале перемотки
+                userTouch = true;
+                handler.removeCallbacks(updateProgressAction);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Логика при завершении перемотки
+                if (exoPlayer != null && exoPlayer.getDuration() > 0) {
+                    long duration = exoPlayer.getDuration();
+                    long newPosition = (duration * seekBar.getProgress()) / 100;
+                    exoPlayer.seekTo(newPosition);
+                }
+                userTouch = false;
+                handler.post(updateProgressAction);
             }
         });
 
-        return view;
-    }
+        // Обработчики кликов
+        backButton.setOnClickListener(v -> closeFullPlayer());
+        playPauseButton.setOnClickListener(v -> togglePlayPause());
+        likeButton.setOnClickListener(v -> toggleLike());
+        remixButton.setOnClickListener(v -> toggleRemix());
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Обработка кнопки "Назад"
+        // Обработка нажатия аппаратной кнопки "Назад"
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -86,133 +169,96 @@ public class FullPlayerFragment extends Fragment {
             }
             return false;
         });
+
+        return view;
     }
 
-    /**
-     * Закрывает большой плеер и возвращает мини-плеер.
-     */
+    private String formatTime(long millis) {
+        long totalSeconds = millis / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+
     private void closeFullPlayer() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideFullPlayer();
         }
     }
 
-    /**
-     * Переключает воспроизведение и паузу.
-     */
     private void togglePlayPause() {
-        if (isPlaying) {
-            // Если трек играет, ставим на паузу
+        if (exoPlayer == null) return;
+        if (exoPlayer.isPlaying()) {
             pauseTrack();
         } else {
-            // Если трек на паузе, воспроизводим
             playTrack();
         }
     }
 
-    /**
-     * Переключает состояние "Лайк".
-     */
-    private void toggleLike() {
-        if (isLiked) {
-            // Анимация для снятия лайка
-            Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
-            Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
-
-            scaleUp.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    likeButton.setImageResource(R.drawable.heart); // Меняем иконку на "Лайк"
-                    likeButton.startAnimation(scaleDown);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-
-            likeButton.startAnimation(scaleUp);
-        } else {
-            // Анимация для добавления лайка
-            Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
-            Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
-
-            scaleUp.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    likeButton.setImageResource(R.drawable.heart_fill); // Меняем иконку на "Лайк (заполненный)"
-                    likeButton.startAnimation(scaleDown);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-
-            likeButton.startAnimation(scaleUp);
-        }
-        isLiked = !isLiked; // Меняем состояние
-    }
-
     private void playTrack() {
         isPlaying = true;
-        // Анимация смены иконки
-        Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
-        Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
-
-        scaleUp.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.play3); // Меняем иконку на паузу
-                playPauseButton.startAnimation(scaleDown);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        playPauseButton.startAnimation(scaleUp);
-        // Здесь добавьте логику для начала воспроизведения трека
+        animateButton(playPauseButton, R.drawable.pause3);
+        exoPlayer.play();
     }
 
     private void pauseTrack() {
         isPlaying = false;
-        // Анимация смены иконки
+        animateButton(playPauseButton, R.drawable.play3);
+        exoPlayer.pause();
+    }
+
+    private void toggleLike() {
+        isLiked = !isLiked;
+        animateButton(likeButton, isLiked ? R.drawable.heart_fill : R.drawable.heart);
+    }
+
+    private void toggleRemix() {
+        isRemixed = !isRemixed;
+        animateButton(remixButton, isRemixed ? R.drawable.remix_on : R.drawable.remix);
+    }
+
+    private void animateButton(ImageView button, int newIcon) {
         Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
         Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
 
         scaleUp.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.pause3); // Меняем иконку на воспроизведение
-                playPauseButton.startAnimation(scaleDown);
+                button.setImageResource(newIcon);
+                button.startAnimation(scaleDown);
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
-
-        playPauseButton.startAnimation(scaleUp);
-        // Здесь добавьте логику для паузы трека
+        button.startAnimation(scaleUp);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Запускаем обновление прогресса плеера
+        handler.post(updateProgressAction);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Останавливаем обновление прогресса, чтобы не было утечек памяти
+        handler.removeCallbacks(updateProgressAction);
+    }
+
+    private void setupMarquee() {
+
+        trackNameTextView.setSelected(true);
+
+        trackNameTextView.post(() -> {
+            boolean isTextTooLong = trackNameTextView.getLayout() != null
+                    && trackNameTextView.getLayout().getLineWidth(0) > trackNameTextView.getWidth();
+            trackNameTextView.setSelected(isTextTooLong);
+        });
+    }
 }

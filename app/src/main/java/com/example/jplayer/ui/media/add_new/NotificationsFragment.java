@@ -75,7 +75,7 @@ public class NotificationsFragment extends Fragment {
                         v.startAnimation(scaleUp);
                         break;
                 }
-                return false; // Возвращаем false, чтобы не перехватывать событие
+                return false; // Не перехватываем событие
             }
         });
     }
@@ -93,6 +93,11 @@ public class NotificationsFragment extends Fragment {
         if (requestCode == PICK_AUDIO_FILE && resultCode == Activity.RESULT_OK && data != null) {
             Uri uri = data.getData();
             if (uri != null) {
+                // Сохраняем постоянное разрешение на доступ к URI
+                final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION &
+                        (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                requireContext().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+
                 processSelectedFile(uri);
             }
         }
@@ -117,7 +122,7 @@ public class NotificationsFragment extends Fragment {
                     !artist.isEmpty() ? artist : "Unknown Artist",
                     !album.isEmpty() ? album : "Unknown Album",
                     duration,
-                    uri.toString(),
+                    uri.toString(),  // сохраняем URI как строку
                     coverPath
             );
 
@@ -195,12 +200,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private int getCurrentUserId() {
-        // Реализация получения ID текущего пользователя
-        // Пример через SharedPreferences:
-        /*
-        SharedPreferences prefs = requireContext().getSharedPreferences("auth", Context.MODE_PRIVATE);
-        return prefs.getInt("currentUserId", -1);
-        */
+        // Реализация получения ID текущего пользователя (пример через SharedPreferences)
         return 1; // Временная заглушка
     }
 

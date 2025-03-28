@@ -24,12 +24,12 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="20dp">
 
             <TextView
                 android:id="@+id/label"
-                android:textSize="40sp"
+                android:textSize="28sp"
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/lupa"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
+                android:layout_width="23dp"
+                android:layout_height="24dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/lupa" />
 
@@ -97,7 +97,7 @@
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last played"
+                android:text="LAST PLAYED"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginBottom="8dp"/>

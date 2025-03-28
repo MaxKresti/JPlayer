@@ -9,72 +9,88 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.database.song.Song;
+import java.util.ArrayList;
 import java.util.List;
 
-public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
+public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> {
 
     private final Context context;
-    public final List<Song> tracks;
+    private final List<Song> trackList;
+    ImageView moreOptions;
+    private final int layoutResId; // Позволяет передавать нужный макет
 
-    public TrackAdapter(Context context, List<Song> tracks) {
+    public TrackAdapter(Context context, List<Song> trackList, int layoutResId) {
         this.context = context;
-        this.tracks = tracks;
+        this.trackList = new ArrayList<>(trackList);
+        this.layoutResId = layoutResId;
     }
 
     @NonNull
     @Override
-    public TrackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context)
-                .inflate(R.layout.main_track, parent, false);
-        return new TrackViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(layoutResId, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TrackViewHolder holder, int position) {
-        Song track = tracks.get(position);
-
-        // Загрузка обложки
-        if (track.coverArt != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(track.coverArt);
-            if (bitmap != null) {
-                holder.trackImage.setImageBitmap(bitmap);
-            }
-        }
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Song track = trackList.get(position);
 
         holder.trackName.setText(track.title);
 
-        // Обработчик клика
+        if (holder.trackAuthor != null) {
+            holder.trackAuthor.setText(track.artist);
+        }
+
+        if (track.coverArt != null && !track.coverArt.isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(track.coverArt);
+            if (bitmap != null) {
+                holder.trackImage.setImageBitmap(bitmap);
+            } else {
+                holder.trackImage.setImageResource(R.drawable.image);
+            }
+        } else {
+            holder.trackImage.setImageResource(R.drawable.image);
+        }
+
         holder.itemView.setOnClickListener(v -> {
-            // Воспроизведение трека
+            if (context instanceof MainActivity) {
+                ((MainActivity) context).playTrack(track);
+            }
         });
+
+
     }
 
     @Override
     public int getItemCount() {
-        return tracks.size();
-    }
-
-    static class TrackViewHolder extends RecyclerView.ViewHolder {
-        ImageView trackImage;
-        TextView trackName;
-
-        public TrackViewHolder(@NonNull View itemView) {
-            super(itemView);
-            trackImage = itemView.findViewById(R.id.trackImage3);
-            trackName = itemView.findViewById(R.id.trackName3);
-        }
+        return trackList.size();
     }
 
     public void updateTracks(List<Song> newTracks) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TrackDiffCallback(tracks, newTracks));
-        tracks.clear();
-        tracks.addAll(newTracks);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TrackDiffCallback(trackList, newTracks));
+        trackList.clear();
+        trackList.addAll(newTracks);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView trackImage;
+        TextView trackName, trackAuthor;
+        ImageView moreOptions;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            trackImage = itemView.findViewById(R.id.trackImage);
+            trackName = itemView.findViewById(R.id.trackName);
+            trackAuthor = itemView.findViewById(R.id.trackAuthor); // Учтён случай с автором
+            moreOptions = itemView.findViewById(R.id.trackMenu);
+        }
     }
 
     static class TrackDiffCallback extends DiffUtil.Callback {
@@ -87,10 +103,14 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         }
 
         @Override
-        public int getOldListSize() { return oldList.size(); }
+        public int getOldListSize() {
+            return oldList.size();
+        }
 
         @Override
-        public int getNewListSize() { return newList.size(); }
+        public int getNewListSize() {
+            return newList.size();
+        }
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
@@ -101,5 +121,5 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
             return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
         }
-    }   
+    }
 }
