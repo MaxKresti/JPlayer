@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/back"
         android:scaleType="fitXY"
         android:clickable="true"
@@ -19,8 +19,8 @@
         android:contentDescription="Назад"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="9dp" />
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp" />
 
     <!-- Заголовок -->
     <TextView

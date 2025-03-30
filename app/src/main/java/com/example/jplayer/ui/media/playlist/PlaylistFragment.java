@@ -4,62 +4,45 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
-import com.example.jplayer.adapters.PlaylistAdapter;
-import com.example.jplayer.database.AppDatabase;
-import com.example.jplayer.database.playlist.Playlist;
-import java.util.List;
+import com.example.jplayer.ui.PlaylistAlbumFragment;
 
-public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlaylistClickListener {
+public class PlaylistFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private PlaylistAdapter adapter;
-    private PlaylistViewModel playlistViewModel;
-    private int currentUserId = 1; // Получи реальный userId
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_playlist, container, false);
-        recyclerView = view.findViewById(R.id.playlistRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new PlaylistAdapter(requireContext(), this);
-        recyclerView.setAdapter(adapter);
-
-        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), playlists -> {
-            adapter.updateData(playlists);
-        });
-
-        loadPlaylists();
-        return view;
-    }
-
-    private void loadPlaylists() {
-        new Thread(() -> {
-            List<Playlist> playlists = AppDatabase.getInstance(requireContext()).playlistDao().getPlaylistsByUserId(currentUserId);
-            requireActivity().runOnUiThread(() -> adapter.updateData(playlists));
-        }).start();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        // Надуваем макет фрагмента
+        return inflater.inflate(R.layout.fragment_playlist, container, false);
     }
 
     @Override
-    public void onPlaylistClick(int playlistId) {
-        openPlaylistAlbumFragment();
-    }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    @Override
-    public void onPlaylistMenuClick(View view, int position) {
-        showContextMenu(view, position);
-    }
+        // Находим контейнер с плейлистами
+        LinearLayout playlistsContainer = view.findViewById(R.id.playlistContainer);
 
+        // Перебираем все элементы плейлистов
+        for (int i = 0; i < playlistsContainer.getChildCount(); i++) {
+            View playlistItem = playlistsContainer.getChildAt(i);
+            ImageView playlistMenu = playlistItem.findViewById(R.id.playlistMenu);
+            ImageView playlistImage = playlistItem.findViewById(R.id.playlistImage);
+
+            // Создаем финальную копию переменной i
+            final int position = i;
+            playlistMenu.setOnClickListener(v -> showContextMenu(v, position));
+            playlistImage.setOnClickListener(v -> openPlaylistAlbumFragment());
+        }
+    }
     private void openPlaylistAlbumFragment() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
@@ -70,16 +53,19 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         PlaylistMenuSheetDialogFragment bottomSheet = new PlaylistMenuSheetDialogFragment();
         bottomSheet.setPosition(position);
         bottomSheet.setOnMenuItemClickListener(new PlaylistMenuSheetDialogFragment.OnMenuItemClickListener() {
+
+
             @Override
             public void onRename(int position) {
-                // Логика переименования
+
             }
 
             @Override
             public void onDelete(int position) {
-                // Логика удаления
+
             }
         });
         bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
     }
+
 }

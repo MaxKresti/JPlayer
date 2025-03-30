@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Тонкая градиентная рамка -->
+            <stroke
+                android:width="1dp"
+                android:color="#404040" />
+
+            <!-- Полупрозрачный фон с легким градиентом -->
+            <gradient
+                android:angle="90"
+                android:startColor="#353535"
+                android:endColor="#2A2A2A" />
+
+            <!-- Скругленные углы -->
+            <corners android:radius="8dp" />
+
+            <!-- Тень -->
+            <padding
+                android:bottom="2dp"
+                android:left="2dp"
+                android:right="2dp"
+                android:top="2dp" />
+        </shape>
+    </item>
+</selector>

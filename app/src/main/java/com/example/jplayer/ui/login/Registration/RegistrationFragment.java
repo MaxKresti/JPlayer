@@ -2,13 +2,18 @@ package com.example.jplayer.ui.login.Registration;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.jplayer.R;
 import com.example.jplayer.database.AppDatabase;
 
 import com.example.jplayer.database.user.User;
@@ -25,6 +30,8 @@ public class RegistrationFragment extends Fragment {
 
         binding.back.setOnClickListener(v -> ((LoginActivity) requireActivity()).navigateToEnter());
         binding.registerButton.setOnClickListener(v -> processRegistration());
+        setupImageAnimation(binding.back);
+
 
         return binding.getRoot();
     }
@@ -69,4 +76,27 @@ public class RegistrationFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    private void setupImageAnimation(ImageView imageView) {
+        Animation scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.smaller);
+        Animation scaleUp = AnimationUtils.loadAnimation(requireContext(), R.anim.bigger);
+
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.startAnimation(scaleDown);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.startAnimation(scaleUp);
+                        break;
+                }
+                return false; // Возвращаем false, чтобы не перехватывать событие
+            }
+        });
+    }
+
+
 }
