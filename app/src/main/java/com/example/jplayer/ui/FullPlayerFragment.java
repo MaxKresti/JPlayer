@@ -31,14 +31,13 @@ public class FullPlayerFragment extends Fragment {
     private PlayerView playerView;
     private ExoPlayer exoPlayer;
 
-    private ImageView backButton, playPauseButton, likeButton, albumImageView,remixButton;
+    private ImageView backButton, playPauseButton, likeButton, albumImageView;
     private SeekBar seekBar;
     private TextView trackNameTextView, authorTextView;
     private TextView currentTimeTextView, durationTimeTextView;
 
     private boolean isPlaying = false;
     private boolean isLiked = false;
-    private boolean isRemixed = false;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable updateProgressAction = new Runnable() {
@@ -58,13 +57,6 @@ public class FullPlayerFragment extends Fragment {
         }
     };
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        trackNameTextView = view.findViewById(R.id.trackName);
-        setupMarquee();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -82,7 +74,6 @@ public class FullPlayerFragment extends Fragment {
         likeButton = view.findViewById(R.id.like);
         currentTimeTextView = view.findViewById(R.id.current);
         durationTimeTextView = view.findViewById(R.id.duration);
-        remixButton = view.findViewById(R.id.remix);
 
         // Получаем ExoPlayer из MainActivity
         if (getActivity() instanceof MainActivity) {
@@ -120,7 +111,6 @@ public class FullPlayerFragment extends Fragment {
             }
         }
 
-
         // Устанавливаем слушатель для SeekBar
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private boolean userTouch = false;
@@ -157,7 +147,6 @@ public class FullPlayerFragment extends Fragment {
         backButton.setOnClickListener(v -> closeFullPlayer());
         playPauseButton.setOnClickListener(v -> togglePlayPause());
         likeButton.setOnClickListener(v -> toggleLike());
-        remixButton.setOnClickListener(v -> toggleRemix());
 
         // Обработка нажатия аппаратной кнопки "Назад"
         view.setFocusableInTouchMode(true);
@@ -197,24 +186,19 @@ public class FullPlayerFragment extends Fragment {
 
     private void playTrack() {
         isPlaying = true;
-        animateButton(playPauseButton, R.drawable.pause3);
+        animateButton(playPauseButton, R.drawable.play3);
         exoPlayer.play();
     }
 
     private void pauseTrack() {
         isPlaying = false;
-        animateButton(playPauseButton, R.drawable.play3);
+        animateButton(playPauseButton, R.drawable.pause3);
         exoPlayer.pause();
     }
 
     private void toggleLike() {
         isLiked = !isLiked;
         animateButton(likeButton, isLiked ? R.drawable.heart_fill : R.drawable.heart);
-    }
-
-    private void toggleRemix() {
-        isRemixed = !isRemixed;
-        animateButton(remixButton, isRemixed ? R.drawable.remix_on : R.drawable.remix);
     }
 
     private void animateButton(ImageView button, int newIcon) {
@@ -249,16 +233,5 @@ public class FullPlayerFragment extends Fragment {
         super.onStop();
         // Останавливаем обновление прогресса, чтобы не было утечек памяти
         handler.removeCallbacks(updateProgressAction);
-    }
-
-    private void setupMarquee() {
-
-        trackNameTextView.setSelected(true);
-
-        trackNameTextView.post(() -> {
-            boolean isTextTooLong = trackNameTextView.getLayout() != null
-                    && trackNameTextView.getLayout().getLineWidth(0) > trackNameTextView.getWidth();
-            trackNameTextView.setSelected(isTextTooLong);
-        });
     }
 }

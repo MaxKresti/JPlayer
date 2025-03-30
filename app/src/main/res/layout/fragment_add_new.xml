@@ -16,8 +16,24 @@ android:layout_height="wrap_content"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent">
 
+    <!-- Title -->
+<TextView
+android:id="@+id/label"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_gravity="center"
+    android:text="Music Player"
+    android:textColor="#FFFFFF"
+    android:textSize="40sp" />
 
-
+    <!-- Divider Line -->
+<View
+android:id="@+id/TopDivider"
+android:layout_width="match_parent"
+android:layout_height="2dp"
+android:layout_marginTop="16dp"
+android:layout_marginBottom="16dp"
+android:background="#FFFFFF" />
 
     <!-- Add New Track -->
 <LinearLayout
@@ -25,26 +41,25 @@ android:id="@+id/add_track"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_marginBottom="40dp"
-android:layout_marginTop="30dp"
 android:orientation="horizontal"
 android:clickable="true"
     android:focusable="true">
 
-    <ImageView
-        android:id="@+id/new_track"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        style="@style/ImageButtonStyle"
-        android:contentDescription="add_new_track"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/new_track" />
+<ImageView
+    android:id="@+id/new_track"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+
+    android:contentDescription="add_new_track"
+    android:layout_marginEnd="16dp"
+    android:background="@drawable/new_track" />
 
 <TextView
     android:id="@+id/text_1"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:layout_marginTop="15dp"
+
     android:contentDescription="add_new_track"
     android:text="Add new track"
     android:textColor="#FFFFFF"
@@ -57,7 +72,6 @@ android:clickable="true"
 android:id="@+id/add_album"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-    android:layout_marginTop="60dp"
 android:layout_marginBottom="4dp"
 android:orientation="horizontal">
 
@@ -67,17 +81,15 @@ android:orientation="horizontal">
     android:layout_height="60dp"
     android:clickable="true"
     android:focusable="true"
-    style="@style/ImageButtonStyle"
     android:contentDescription="add_new_album"
     android:layout_marginEnd="16dp"
-    android:src="@drawable/new_album" />
+    android:background="@drawable/new_album" />
 
 <TextView
     android:id="@+id/text_2"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:layout_marginTop="15dp"
     android:clickable="true"
     android:focusable="true"
     android:contentDescription="add_new_album"
@@ -92,29 +104,26 @@ android:orientation="horizontal">
 android:id="@+id/add_playlist"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-android:layout_marginTop="100dp"
-
-android:orientation="horizontal">
+android:layout_marginTop="40dp"
+android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true">
 
 <ImageView
     android:id="@+id/new_playlist"
     android:layout_width="60dp"
     android:layout_height="60dp"
-    android:clickable="true"
-    android:focusable="true"
-    style="@style/ImageButtonStyle"
+
     android:contentDescription="add_new_playlist"
     android:layout_marginEnd="16dp"
-    android:src="@drawable/new_playlist" />
+    android:background="@drawable/new_playlist" />
 
 <TextView
     android:id="@+id/text_3"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:clickable="true"
-    android:focusable="true"
-    android:layout_marginTop="15dp"
+
     android:contentDescription="add_new_playlist"
     android:text="Add new playlist"
     android:textColor="#FFFFFF"

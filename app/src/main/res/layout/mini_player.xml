@@ -10,100 +10,91 @@
     android:clickable="true"
     android:focusable="true">
 
-    <!-- 1. Обложка трека -->
+
+    <!-- Обложка трека -->
     <ImageView
         android:id="@+id/trackCover"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/image"
+
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- 2. Текст (название и исполнитель) -->
+    <!-- Название трека и исполнителя -->
     <LinearLayout
-        android:id="@+id/trackInfoLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_vertical"
-        android:paddingHorizontal="12dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@id/trackCover"
-        app:layout_constraintEnd_toStartOf="@id/controlsLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/playPauseButton">
 
         <TextView
             android:id="@+id/trackTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Название трека"
+
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:scrollHorizontally="true" />
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/trackArtist"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Исполнитель"
+
             android:textColor="#A0A0A0"
             android:textSize="14sp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:scrollHorizontally="true" />
+            android:maxLines="1"
+            android:ellipsize="end" />
     </LinearLayout>
+    <!-- Кнопка прошлого трека -->
+    <ImageButton
+        android:id="@+id/prevButton"
+        android:scaleType="centerCrop"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/preview"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toStartOf="@id/playPauseButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- 3. Контейнер для кнопок управления (все вместе справа) -->
-    <LinearLayout
-        android:id="@+id/controlsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+    <!-- Кнопка воспроизведения/паузы -->
+    <ImageButton
+        android:id="@+id/playPauseButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/pause2"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="centerCrop"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toStartOf="@id/nextButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Кнопка следующего трека -->
+    <ImageButton
+        android:id="@+id/nextButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/next"
+        android:scaleType="centerCrop"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <!-- Кнопка прошлого трека -->
-        <ImageButton
-            android:id="@+id/prevButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/preview"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-
-        <!-- Кнопка воспроизведения/паузы -->
-        <ImageButton
-            android:id="@+id/playPauseButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/pause2"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerCrop"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-
-        <!-- Кнопка следующего трека -->
-        <ImageButton
-            android:id="@+id/nextButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/next"
-            android:scaleType="centerCrop"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

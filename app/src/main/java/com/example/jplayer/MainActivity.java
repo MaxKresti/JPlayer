@@ -1,29 +1,33 @@
 package com.example.jplayer;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
-import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.ActivityMainBinding;
-import com.example.jplayer.ui.MiniPlayerFragment;
 import com.example.jplayer.ui.FullPlayerFragment;
+import com.example.jplayer.ui.MiniPlayerFragment;
 import com.example.jplayer.ui.PlaylistAlbumFragment;
-import com.example.jplayer.ui.setting.SettingFragment;
+import com.example.jplayer.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -38,39 +42,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Инициализация viewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Создаем экземпляр ExoPlayer
         exoPlayer = new ExoPlayer.Builder(this).build();
 
+        // Настройка BottomNavigationView и Navigation Component
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
-        // Настройка цветов BottomNavigationView
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_checked },   // активный элемент
-                new int[] { -android.R.attr.state_checked }   // неактивный элемент
-        };
-
-        int[] colors = new int[] {
-                ContextCompat.getColor(this, R.color.purple_500), // фиолетовый для активного
-                Color.WHITE                                      // белый для неактивного
-        };
-
-        ColorStateList colorStateList = new ColorStateList(states, colors);
-        navView.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.nav_icon_color));
-        navView.setItemTextColor(ContextCompat.getColorStateList(this, R.color.nav_icon_color));
-
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,
                 R.id.navigation_media,
                 R.id.navigation_add_new
         ).build();
-
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        exoPlayer.addListener(new Player.Listener() {
+        // Обработчик ошибок ExoPlayer
+        exoPlayer.addListener(new ExoPlayer.Listener() {
             @Override
             public void onPlayerError(PlaybackException error) {
                 Log.e("ExoPlayerError", "Ошибка воспроизведения: " + error.getMessage());
@@ -80,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Метод для воспроизведения трека.
+     * Сохраняет текущий трек, настраивает ExoPlayer и отображает мини-плеер.
      */
     public void playTrack(Song song) {
         currentSong = song;
@@ -88,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
         exoPlayer.clearMediaItems();
 
+        // Проверка существования файла (для отладки)
         File file = new File(song.filePath);
         if (!file.exists()) {
             Log.e("playTrack", "Файл не существует: " + song.filePath);
@@ -99,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         exoPlayer.seekTo(0);
         exoPlayer.play();
 
+        // Показываем мини-плеер с данными о треке
         showMiniPlayer(song);
     }
 
@@ -110,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Показывает мини-плеер с данными о треке.
+     * Показывает мини-плеер с информацией о треке.
      */
     public void showMiniPlayer(Song song) {
         Bundle bundle = new Bundle();
@@ -126,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * Перегруженный метод для показа мини-плеера без передачи данных.
+     */
     public void showMiniPlayer() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.miniPlayerContainer, new MiniPlayerFragment())
@@ -145,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Показывает FullPlayerFragment.
+     * Показывает FullPlayerFragment с анимацией и передает данные о текущем треке.
      */
     public void showFullPlayer() {
         // Проверяем, что currentSong не равен null
@@ -160,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         // Создаем экземпляр FullPlayerFragment
         FullPlayerFragment fullPlayerFragment = new FullPlayerFragment();
 
-        // Передаём информацию о текущем треке
+        // Передаем информацию о текущем треке
         Bundle args = new Bundle();
         args.putString("trackName", currentSong.title);
         args.putString("author", currentSong.artist);
@@ -196,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Скрывает FullPlayerFragment и восстанавливает мини-плеер с данными о текущем треке.
+     * Скрывает FullPlayerFragment, восстанавливает мини-плеер и показывает нижнюю навигацию.
      */
     public void hideFullPlayer() {
         getSupportFragmentManager().popBackStack();
@@ -209,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-        // Анимация закрытия контейнера большого плеера
+        // Анимация для закрытия контейнера большого плеера
         View fullPlayerContainer = findViewById(R.id.fullPlayerContainer);
         if (fullPlayerContainer != null) {
             fullPlayerContainer.animate()
@@ -229,6 +226,24 @@ public class MainActivity extends AppCompatActivity {
         } else {
             showMiniPlayer();
         }
+    }
+
+    /**
+     * Метод для удаления трека.
+     * Удаляет песню из базы данных и останавливает воспроизведение, если она играет.
+     */
+    public void deleteTrack(Song song) {
+        // Удаление из базы данных
+        AppDatabase.getInstance(this).songDao().delete(song);
+        Log.d("MainActivity", "Трек удален из базы: " + song.title);
+
+        // Если удаляемая песня воспроизводится, остановить плеер
+        if (currentSong != null && currentSong.id == song.id) {
+            exoPlayer.stop();
+            currentSong = null;
+        }
+
+        // Можно добавить дополнительное обновление UI, например, обновление списка треков
     }
 
     /**
@@ -288,61 +303,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showSetting() {
-
-        SettingFragment SettingFragment = new SettingFragment();
-
-
-        View SettingContainer = findViewById(R.id.SettingContainer);
-        if (SettingContainer != null) {
-            SettingContainer.setVisibility(View.VISIBLE);
-            SettingContainer.setTranslationY(SettingContainer.getHeight());
-            SettingContainer.setAlpha(0.0f);
-
-            // Анимация для появления фрагмента
-            SettingContainer.animate()
-                    .translationY(0) // Перемещаем вверх
-                    .alpha(1.0f) // Увеличиваем прозрачность
-                    .setDuration(300) // Длительность анимации
-                    .start();
+    public void stopIfPlaying(Song song) {
+        if (currentSong != null && currentSong.id == song.id) {
+            exoPlayer.stop();
+            // Можно также вызвать exoPlayer.clearMediaItems(), если нужно очистить список медиа.
+            currentSong = null;
         }
+    }
 
-        // Скрываем BottomNavigationView
-        setBottomNavigationVisibility(false);
+    public void showRenameDialog(final Song song, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Переименовать трек");
 
-        // Заменяем фрагмент
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.SettingContainer, SettingFragment)
-                .addToBackStack(null) // Добавляем в back stack для возможности возврата
-                .commit();
+        final EditText input = new EditText(this);
+        input.setText(song.title);
+        builder.setView(input);
+
+        builder.setPositiveButton("ОК", (dialog, which) -> {
+            String newTitle = input.getText().toString().trim();
+            if (!newTitle.isEmpty() && !newTitle.equals(song.title)) {
+                song.title = newTitle;
+                AppDatabase.getInstance(this).songDao().update(song);
+                Toast.makeText(this, "Трек переименован", Toast.LENGTH_SHORT).show();
+                // Если адаптер использует LiveData, обновление произойдёт автоматически.
+                // Или можно вызвать notifyItemChanged(position) в адаптере.
+            }
+        });
+        builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
+
+        builder.show();
     }
 
 
-    public void hideSetting() {
-
-        Fragment SettingFragment = getSupportFragmentManager().findFragmentById(R.id.SettingContainer);
-        if (SettingFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(SettingFragment)
-                    .commit();
-        }
-
-        // Анимация для закрытия фрагмента
-        View SettingContainer = findViewById(R.id.SettingContainer);
-        if (SettingContainer != null) {
-            SettingContainer.animate()
-                    .translationY(SettingContainer.getHeight()) // Перемещаем вниз
-                    .alpha(0.0f) // Уменьшаем прозрачность
-                    .setDuration(300) // Длительность анимации
-                    .withEndAction(() -> {
-                        SettingContainer.setVisibility(View.GONE); // Скрываем контейнер
-                    })
-                    .start();
-        }
-
-        // Показываем BottomNavigationView
-        setBottomNavigationVisibility(true);
-    }
 
     @Override
     protected void onDestroy() {
