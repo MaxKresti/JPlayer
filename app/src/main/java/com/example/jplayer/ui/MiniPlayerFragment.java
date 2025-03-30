@@ -40,10 +40,7 @@ public class MiniPlayerFragment extends Fragment {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).showFullPlayer();
             }
-
-
         });
-
 
 
         // Инициализация UI элементов
@@ -85,25 +82,9 @@ public class MiniPlayerFragment extends Fragment {
         return view;
     }
 
-    private void setupMarqueeEffect() {
-        // Установка параметров для бегущей строки
-        trackTitle.setSelected(true);
-        trackArtist.setSelected(true);
-
-        // Автоматическая активация при длинном тексте
-        trackTitle.post(() -> {
-            if (trackTitle.getLineCount() > 1 || trackTitle.getPaint().measureText(trackTitle.getText().toString()) > trackTitle.getWidth()) {
-                trackTitle.setSelected(true);
-            }
-        });
-
-        trackArtist.post(() -> {
-            if (trackArtist.getLineCount() > 1 || trackArtist.getPaint().measureText(trackArtist.getText().toString()) > trackArtist.getWidth()) {
-                trackArtist.setSelected(true);
-            }
-        });
-    }
-
+    /**
+     * Переключает воспроизведение и паузу с анимацией.
+     */
     private void togglePlayPause() {
         if (exoPlayer == null) return;
         if (exoPlayer.isPlaying()) {
@@ -182,6 +163,23 @@ public class MiniPlayerFragment extends Fragment {
         }
     }
 
+    private void setupMarqueeEffect() {
+        // Установка параметров для бегущей строки
+        trackTitle.setSelected(true);
+        trackArtist.setSelected(true);
 
+        // Автоматическая активация при длинном тексте
+        trackTitle.post(() -> {
+            if (trackTitle.getLineCount() > 1 || trackTitle.getPaint().measureText(trackTitle.getText().toString()) > trackTitle.getWidth()) {
+                trackTitle.setSelected(true);
+            }
+        });
+
+        trackArtist.post(() -> {
+            if (trackArtist.getLineCount() > 1 || trackArtist.getPaint().measureText(trackArtist.getText().toString()) > trackArtist.getWidth()) {
+                trackArtist.setSelected(true);
+            }
+        });
+    }
 
 }

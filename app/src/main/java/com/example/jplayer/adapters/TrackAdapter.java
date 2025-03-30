@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
+import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.song.Song;
+import com.example.jplayer.ui.media.track.TrackMenuSheetDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
 
     private final Context context;
     private final List<Song> trackList;
-    ImageView moreOptions;
     private final int layoutResId; // Позволяет передавать нужный макет
 
     public TrackAdapter(Context context, List<Song> trackList, int layoutResId) {
@@ -44,7 +46,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         holder.trackName.setText(track.title);
 
         if (holder.trackAuthor != null) {
-            holder.trackAuthor.setText(track.artist);
+            holder.trackAuthor.setText(track.artist != null ? track.artist : "Unknown Artist");
         }
 
         if (track.coverArt != null && !track.coverArt.isEmpty()) {
@@ -58,20 +60,67 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             holder.trackImage.setImageResource(R.drawable.image);
         }
 
+        // Обработчик клика по элементу списка для воспроизведения трека
         holder.itemView.setOnClickListener(v -> {
             if (context instanceof MainActivity) {
                 ((MainActivity) context).playTrack(track);
             }
         });
 
+        // Если в макете присутствует кнопка "три точки", назначаем обработчик клика
+        if (holder.moreOptions != null) {
+            holder.moreOptions.setOnClickListener(v -> {
+                TrackMenuSheetDialogFragment dialog = new TrackMenuSheetDialogFragment();
+                dialog.setPosition(position);
+                dialog.setOnMenuItemClickListener(new TrackMenuSheetDialogFragment.OnMenuItemClickListener() {
+                    @Override
+                    public void onAddToPlaylist(int pos) {
+                        // Реализуйте логику добавления в плейлист
+                    }
+                    @Override
+                    public void onRename(int pos) {
+                        // Здесь вызываем метод переименования, передавая текущий трек и позицию.
+                        if (context instanceof MainActivity) {
+                            ((MainActivity) context).showRenameDialog(trackList.get(pos), pos);
+                        }
+                    }
+                    @Override
+                    public void onDelete(int position) {
+                        Song songToDelete = trackList.get(position);
 
+                        // Удаление из базы
+                        AppDatabase.getInstance(context).songDao().delete(songToDelete);
+
+                        // Остановка плеера, если удаляемая песня играет
+                        if (context instanceof MainActivity) {
+                            ((MainActivity) context).stopIfPlaying(songToDelete);
+                        }
+
+                        // Удаление из списка адаптера
+                        removeTrack(position);
+                    }
+                });
+                dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "track_menu");
+            });
+        }
     }
+
+    public void removeTrack(int position) {
+        if (position >= 0 && position < trackList.size()) {
+            trackList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
 
     @Override
     public int getItemCount() {
         return trackList.size();
     }
 
+    /**
+     * Обновляет список треков с использованием DiffUtil для анимированного обновления.
+     */
     public void updateTracks(List<Song> newTracks) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TrackDiffCallback(trackList, newTracks));
         trackList.clear();
@@ -79,17 +128,18 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         diffResult.dispatchUpdatesTo(this);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView trackImage;
         TextView trackName, trackAuthor;
-        ImageView moreOptions;
+        ImageView moreOptions;  // Может быть null, если макет не содержит эту кнопку
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Обратите внимание на id – они должны совпадать с теми, что заданы в layoutResId
             trackImage = itemView.findViewById(R.id.trackImage);
             trackName = itemView.findViewById(R.id.trackName);
-            trackAuthor = itemView.findViewById(R.id.trackAuthor); // Учтён случай с автором
-            moreOptions = itemView.findViewById(R.id.trackMenu);
+            trackAuthor = itemView.findViewById(R.id.trackAuthor); // Если в макете нет trackAuthor, то это будет null
+            moreOptions = itemView.findViewById(R.id.trackMenu);     // Если макет не содержит trackMenu, то это будет null
         }
     }
 

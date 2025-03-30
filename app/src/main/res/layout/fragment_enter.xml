@@ -103,7 +103,6 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Запомнить меня"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/passwordInput"
@@ -112,7 +111,4 @@
         android:layout_marginLeft="30dp"
         tools:layout_editor_absoluteX="43dp"
         tools:layout_editor_absoluteY="252dp" />
-
-/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

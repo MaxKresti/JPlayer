@@ -19,8 +19,8 @@
         android:contentDescription="Назад"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="9dp" />
 
     <!-- Заголовок -->
     <TextView
