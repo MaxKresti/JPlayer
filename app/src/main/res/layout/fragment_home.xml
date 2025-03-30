@@ -21,19 +21,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Выход" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+
             android:layout_marginBottom="20dp">
 
             <TextView
                 android:id="@+id/label"
-                android:textSize="28sp"
-                android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Music Player" />
+                android:text="Music Player"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp" />
 
             <ImageView
                 android:id="@+id/setting"
@@ -77,9 +84,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="   Search..."
+                android:hint="Search..."
                 android:textColor="#FFFFFF"
                 android:textColorHint="#A0A0A0"
+                android:layout_marginLeft="10dp"
                 android:background="@null"
                 android:imeOptions="actionSearch"
                 android:maxLines="1"/>
@@ -97,7 +105,7 @@
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LAST PLAYED"
+                android:text="Last played"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginBottom="8dp"/>

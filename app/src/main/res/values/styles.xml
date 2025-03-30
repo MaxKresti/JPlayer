@@ -2,7 +2,7 @@
     <!-- Базовый стиль для BottomNavigationView -->
     <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
         <!-- Цвет фона -->
-        <item name="android:background">#FFFFFF</item>
+        <item name="android:background">#272727</item>
         <item name="itemIconTint">@drawable/bottom_nav_colors</item>
         <item name="itemTextColor">@drawable/bottom_nav_colors</item>
     </style>
