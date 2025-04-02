@@ -2,6 +2,7 @@ package com.example.jplayer.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,16 +15,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
-
+import com.bumptech.glide.Glide;
 import com.example.jplayer.R;
 import com.example.jplayer.MainActivity;
-
+import com.example.jplayer.database.song.Song;
+import java.io.File;
 import java.util.Locale;
 
 public class FullPlayerFragment extends Fragment {
@@ -32,6 +33,7 @@ public class FullPlayerFragment extends Fragment {
     private ExoPlayer exoPlayer;
 
     private ImageView backButton, playPauseButton, likeButton, albumImageView;
+    private ImageView prevButton, nextButton; // Кнопки переключения треков
     private SeekBar seekBar;
     private TextView trackNameTextView, authorTextView;
     private TextView currentTimeTextView, durationTimeTextView;
@@ -46,23 +48,14 @@ public class FullPlayerFragment extends Fragment {
             if (exoPlayer != null && exoPlayer.getDuration() > 0) {
                 long currentPosition = exoPlayer.getCurrentPosition();
                 long duration = exoPlayer.getDuration();
-                // Обновляем SeekBar, предполагая, что максимальное значение = 100
                 int progress = (int) ((currentPosition * 100) / duration);
                 seekBar.setProgress(progress);
-                // Обновляем текстовые поля времени
                 currentTimeTextView.setText(formatTime(currentPosition));
                 durationTimeTextView.setText(formatTime(duration - currentPosition));
             }
             handler.postDelayed(this, 1000);
         }
     };
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        trackNameTextView = view.findViewById(R.id.trackName);
-        setupMarquee();
-    }
 
     @Nullable
     @Override
@@ -81,63 +74,36 @@ public class FullPlayerFragment extends Fragment {
         likeButton = view.findViewById(R.id.like);
         currentTimeTextView = view.findViewById(R.id.current);
         durationTimeTextView = view.findViewById(R.id.duration);
+        prevButton = view.findViewById(R.id.prev);
+        nextButton = view.findViewById(R.id.next);
 
         // Получаем ExoPlayer из MainActivity
         if (getActivity() instanceof MainActivity) {
             exoPlayer = ((MainActivity) getActivity()).getExoPlayer();
         }
 
-        // Извлекаем данные из Bundle и устанавливаем UI
+        // Если переданы данные из Bundle, обновляем UI
         Bundle args = getArguments();
         if (args != null) {
-            String trackName = args.getString("trackName", "Неизвестный трек");
-            String author = args.getString("author", "Неизвестный артист");
-            String coverArtPath = args.getString("coverArt", "");
-            long trackPosition = args.getLong("trackPosition", 0);
-
-            trackNameTextView.setText(trackName);
-            authorTextView.setText(author);
-
-            if (coverArtPath != null && !coverArtPath.isEmpty()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(coverArtPath);
-                if (bitmap != null) {
-                    albumImageView.setImageBitmap(bitmap);
-                } else {
-                    albumImageView.setImageResource(R.drawable.image);
-                }
-            } else {
-                albumImageView.setImageResource(R.drawable.image);
-            }
-
-            if (exoPlayer != null) {
-                long currentPos = exoPlayer.getCurrentPosition();
-                // Если разница больше 500 мс, тогда перематываем, иначе оставляем как есть
-                if (Math.abs(currentPos - trackPosition) > 500) {
-                    exoPlayer.seekTo(trackPosition);
-                }
-            }
+            updateTrackInfo(args);
         }
 
-        // Устанавливаем слушатель для SeekBar
+        // Слушатель для SeekBar
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private boolean userTouch = false;
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Если изменение вызвано пользователем, рассчитываем новую позицию
                 if (fromUser && exoPlayer != null && exoPlayer.getDuration() > 0) {
                     long duration = exoPlayer.getDuration();
                     long newPosition = (duration * progress) / 100;
                     currentTimeTextView.setText(formatTime(newPosition));
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 userTouch = true;
                 handler.removeCallbacks(updateProgressAction);
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (exoPlayer != null && exoPlayer.getDuration() > 0) {
@@ -154,8 +120,18 @@ public class FullPlayerFragment extends Fragment {
         backButton.setOnClickListener(v -> closeFullPlayer());
         playPauseButton.setOnClickListener(v -> togglePlayPause());
         likeButton.setOnClickListener(v -> toggleLike());
+        prevButton.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).playPreviousTrack();
+            }
+        });
+        nextButton.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).playNextTrack();
+            }
+        });
 
-        // Обработка нажатия аппаратной кнопки "Назад"
+        // Обработка аппаратной кнопки "Назад"
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -167,6 +143,42 @@ public class FullPlayerFragment extends Fragment {
         });
 
         return view;
+    }
+
+    /**
+     * Обновляет UI full player на основе переданных данных.
+     * Здесь coverArtPath обрабатывается: если начинается с "content://" или "file://",
+     * то используется как URI, иначе предполагается, что это абсолютный путь.
+     */
+    public void updateTrackInfo(Bundle args) {
+        if (args == null) return;
+        String trackName = args.getString("trackName", "Неизвестный трек");
+        String author = args.getString("author", "Неизвестный артист");
+        String coverArtPath = args.getString("coverArt", "");
+        long trackPosition = args.getLong("trackPosition", 0);
+
+        trackNameTextView.setText(trackName);
+        authorTextView.setText(author);
+
+        if (coverArtPath != null && !coverArtPath.isEmpty()) {
+            Uri imageUri;
+            if (coverArtPath.startsWith("content://") || coverArtPath.startsWith("file://")) {
+                imageUri = Uri.parse(coverArtPath);
+            } else {
+                imageUri = Uri.fromFile(new File(coverArtPath));
+            }
+            Glide.with(getContext())
+                    .load(imageUri)
+                    .placeholder(R.drawable.image)
+                    .error(R.drawable.image)
+                    .into(albumImageView);
+        } else {
+            albumImageView.setImageResource(R.drawable.image);
+        }
+
+        if (exoPlayer != null) {
+            exoPlayer.seekTo(trackPosition);
+        }
     }
 
     private String formatTime(long millis) {
@@ -211,19 +223,16 @@ public class FullPlayerFragment extends Fragment {
     private void animateButton(ImageView button, int newIcon) {
         Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
         Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
-
         scaleUp.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
-
+            public void onAnimationStart(Animation animation) { }
             @Override
             public void onAnimationEnd(Animation animation) {
                 button.setImageResource(newIcon);
                 button.startAnimation(scaleDown);
             }
-
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) { }
         });
         button.startAnimation(scaleUp);
     }
@@ -231,25 +240,28 @@ public class FullPlayerFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Запускаем обновление прогресса плеера
         handler.post(updateProgressAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // Останавливаем обновление прогресса, чтобы не было утечек памяти
         handler.removeCallbacks(updateProgressAction);
     }
 
-    private void setupMarquee() {
-
-        trackNameTextView.setSelected(true);
-
-        trackNameTextView.post(() -> {
-            boolean isTextTooLong = trackNameTextView.getLayout() != null
-                    && trackNameTextView.getLayout().getLineWidth(0) > trackNameTextView.getWidth();
-            trackNameTextView.setSelected(isTextTooLong);
-        });
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof MainActivity) {
+            Song current = ((MainActivity) getActivity()).getCurrentSong();
+            if (current != null && exoPlayer != null) {
+                Bundle args = new Bundle();
+                args.putString("trackName", current.title);
+                args.putString("author", current.artist);
+                args.putString("coverArt", current.coverArt);
+                args.putLong("trackPosition", exoPlayer.getCurrentPosition());
+                updateTrackInfo(args);
+            }
+        }
     }
 }

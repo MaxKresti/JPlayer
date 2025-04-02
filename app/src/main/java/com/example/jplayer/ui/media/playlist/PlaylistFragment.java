@@ -62,7 +62,7 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
 
     private void openPlaylistAlbumFragment() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
+//            ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
         }
     }
 

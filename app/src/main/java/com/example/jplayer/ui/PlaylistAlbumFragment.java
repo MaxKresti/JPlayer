@@ -94,7 +94,7 @@ public class PlaylistAlbumFragment extends Fragment {
      */
     private void closePlaylistAlbum() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hidePlaylistAlbum(); // Закрываем PlaylistAlbumFragment
+//            ((MainActivity) getActivity()).hidePlaylistAlbum(); // Закрываем PlaylistAlbumFragment
         }
     }
 
