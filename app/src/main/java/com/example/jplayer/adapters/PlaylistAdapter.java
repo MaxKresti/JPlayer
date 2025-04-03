@@ -23,7 +23,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     private final OnPlaylistClickListener listener;
 
     public interface OnPlaylistClickListener {
-        void onPlaylistClick(int playlistId);
+        // Передаем весь объект плейлиста для дальнейшей работы
+        void onPlaylistClick(Playlist playlist);
         void onPlaylistMenuClick(View view, int position);
     }
 
@@ -40,6 +41,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Инфлейтим layout, убедитесь, что item_playlist.xml содержит нужные элементы
         View view = LayoutInflater.from(context).inflate(R.layout.item_playlist, parent, false);
         return new PlaylistViewHolder(view);
     }
@@ -48,26 +50,36 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist playlist = playlists.get(position);
 
+        // Устанавливаем название плейлиста
         if (holder.playlistName != null) {
             holder.playlistName.setText(playlist.name);
         } else {
             Log.e("PlaylistAdapter", "playlistName is null!");
         }
 
-        // Используем Glide для загрузки изображения
+        // Загружаем изображение плейлиста через Glide
         if (playlist.coverImage != null && !playlist.coverImage.isEmpty()) {
-            Glide.with(context)
-                    .load(Uri.parse(playlist.coverImage))
-                    .placeholder(R.drawable.image)
-                    .error(R.drawable.image)
-                    .into(holder.coverImage);
+            try {
+                Uri imageUri = Uri.parse(playlist.coverImage);
+                Glide.with(context)
+                        .load(imageUri)
+                        .placeholder(R.drawable.image)
+                        .error(R.drawable.image)
+                        .into(holder.coverImage);
+            } catch (Exception e) {
+                Log.e("PlaylistAdapter", "Ошибка загрузки изображения: " + e.getMessage());
+                holder.coverImage.setImageResource(R.drawable.image);
+            }
         } else {
             holder.coverImage.setImageResource(R.drawable.image);
         }
 
         Log.d("PlaylistAdapter", "Binding playlist: " + playlist.name);
 
-        holder.coverImage.setOnClickListener(v -> listener.onPlaylistClick(playlist.id));
+        // Обработчик клика по обложке — передаем объект плейлиста
+        holder.coverImage.setOnClickListener(v -> listener.onPlaylistClick(playlist));
+
+        // Обработчик клика по кнопке меню
         holder.menuButton.setOnClickListener(v -> listener.onPlaylistMenuClick(v, position));
     }
 

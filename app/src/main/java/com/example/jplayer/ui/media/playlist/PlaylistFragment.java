@@ -1,6 +1,9 @@
 package com.example.jplayer.ui.media.playlist;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +25,7 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
     private RecyclerView recyclerView;
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
-    private int currentUserId = 1; // Получи реальный userId
+    private int currentUserId; // Теперь получаем динамически
 
     @Nullable
     @Override
@@ -35,35 +38,45 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         recyclerView.setAdapter(adapter);
 
         playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), playlists -> {
-            adapter.updateData(playlists);
-        });
+        playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), this::updatePlaylistData);
 
         loadPlaylists();
         return view;
     }
 
     private void loadPlaylists() {
+        SharedPreferences preferences = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        currentUserId = preferences.getInt("currentUserId", -1);
+
+        if (currentUserId == -1) {
+            Log.e("PlaylistFragment", "Не удалось получить currentUserId!");
+            return;
+        }
+
         new Thread(() -> {
-            List<Playlist> playlists = AppDatabase.getInstance(requireContext()).playlistDao().getPlaylistsByUserId(currentUserId);
+            List<Playlist> playlists = AppDatabase.getInstance(requireContext())
+                    .playlistDao()
+                    .getPlaylistsByUserId(currentUserId);
+
             requireActivity().runOnUiThread(() -> adapter.updateData(playlists));
         }).start();
     }
 
+
+    private void updatePlaylistData(List<Playlist> playlists) {
+        adapter.updateData(playlists);
+    }
+
     @Override
-    public void onPlaylistClick(int playlistId) {
-        openPlaylistAlbumFragment();
+    public void onPlaylistClick(Playlist playlist) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showPlaylistAlbum(playlist);
+        }
     }
 
     @Override
     public void onPlaylistMenuClick(View view, int position) {
         showContextMenu(view, position);
-    }
-
-    private void openPlaylistAlbumFragment() {
-        if (getActivity() instanceof MainActivity) {
-//            ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
-        }
     }
 
     private void showContextMenu(View anchorView, int position) {

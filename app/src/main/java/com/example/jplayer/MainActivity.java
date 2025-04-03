@@ -21,6 +21,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.jplayer.database.AppDatabase;
+import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.ActivityMainBinding;
 import com.example.jplayer.ui.FullPlayerFragment;
@@ -211,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Проверяет, открыт ли FullPlayerFragment.
-     * Для этого мы ищем контейнер fullPlayerContainer.
      */
     private boolean isFullPlayerVisible() {
         View fullPlayerContainer = findViewById(R.id.fullPlayerContainer);
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Показывает FullPlayerFragment с передачей данных о текущем треке.
-     * Устанавливаем тег "full_player_fragment" для поиска обновления UI.
+     * Устанавливаем тег "full_player_fragment" для дальнейших обновлений.
      */
     public void showFullPlayer() {
         if (currentSong == null) {
@@ -254,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
 
         setBottomNavigationVisibility(false);
 
-        // Здесь устанавливаем тег "full_player_fragment" для дальнейших обновлений
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -344,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
                 song.title = newTitle;
                 AppDatabase.getInstance(this).songDao().update(song);
                 Toast.makeText(this, "Трек переименован", Toast.LENGTH_SHORT).show();
-                // Обновление UI происходит через LiveData или обновление адаптера
             }
         });
         builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
@@ -397,6 +395,44 @@ public class MainActivity extends AppCompatActivity {
     public Song getCurrentSong() {
         return currentSong;
     }
+
+    public void showPlaylistAlbum(Playlist playlist) {
+        if (playlist == null) {
+            Log.e("MainActivity", "Playlist is null!");
+            return;
+        }
+
+        // Создаем экземпляр фрагмента полноэкранного представления плейлиста
+        PlaylistAlbumFragment fragment = new PlaylistAlbumFragment();
+        Bundle args = new Bundle();
+        args.putInt("playlistId", playlist.id);
+        args.putString("playlistName", playlist.name);
+        args.putString("playlistImage", playlist.coverImage);
+        fragment.setArguments(args);
+
+        // Найдем контейнер для полноэкранного представления плейлиста
+        View container = findViewById(R.id.playlistAlbumContainer);
+        if (container != null) {
+            container.setVisibility(View.VISIBLE);
+        } else {
+            Log.e("MainActivity", "Контейнер playlistAlbumContainer не найден!");
+        }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.playlistAlbumContainer, fragment, "playlist_album_fragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void hidePlaylistAlbum() {
+        View container = findViewById(R.id.playlistAlbumContainer);
+        if (container != null) {
+            container.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
