@@ -3,6 +3,8 @@ package com.example.jplayer.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +48,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         holder.trackName.setText(track.title);
 
         if (holder.trackAuthor != null) {
-            holder.trackAuthor.setText(track.artist != null ? track.artist : "Unknown Artist");
+            holder.trackAuthor.setText(track.artist != null ? track.artist : "Неизвестный исполнитель");
         }
 
         if (track.coverArt != null && !track.coverArt.isEmpty()) {
@@ -60,10 +62,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             holder.trackImage.setImageResource(R.drawable.image);
         }
 
-        // Обработчик клика по элементу списка для воспроизведения трека
+        // Обработчик клика по элементу списка для воспроизведения трека из всего списка
         holder.itemView.setOnClickListener(v -> {
             if (context instanceof MainActivity) {
-                ((MainActivity) context).playTrack(track);
+                // Передаем весь список треков и позицию выбранного трека
+                ((MainActivity) context).playTrackFromPlaylist(trackList, position);
             }
         });
 
@@ -79,7 +82,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
                     }
                     @Override
                     public void onRename(int pos) {
-                        // Здесь вызываем метод переименования, передавая текущий трек и позицию.
                         if (context instanceof MainActivity) {
                             ((MainActivity) context).showRenameDialog(trackList.get(pos), pos);
                         }
@@ -87,16 +89,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
                     @Override
                     public void onDelete(int position) {
                         Song songToDelete = trackList.get(position);
-
-                        // Удаление из базы
                         AppDatabase.getInstance(context).songDao().delete(songToDelete);
-
-                        // Остановка плеера, если удаляемая песня играет
                         if (context instanceof MainActivity) {
                             ((MainActivity) context).stopIfPlaying(songToDelete);
                         }
-
-                        // Удаление из списка адаптера
                         removeTrack(position);
                     }
                 });
@@ -111,7 +107,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             notifyItemRemoved(position);
         }
     }
-
 
     @Override
     public int getItemCount() {
@@ -135,11 +130,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Обратите внимание на id – они должны совпадать с теми, что заданы в layoutResId
+            // Убедитесь, что ID совпадают с теми, что заданы в макете
             trackImage = itemView.findViewById(R.id.trackImage);
             trackName = itemView.findViewById(R.id.trackName);
-            trackAuthor = itemView.findViewById(R.id.trackAuthor); // Если в макете нет trackAuthor, то это будет null
-            moreOptions = itemView.findViewById(R.id.trackMenu);     // Если макет не содержит trackMenu, то это будет null
+            trackAuthor = itemView.findViewById(R.id.trackAuthor);
+            moreOptions = itemView.findViewById(R.id.trackMenu);
         }
     }
 

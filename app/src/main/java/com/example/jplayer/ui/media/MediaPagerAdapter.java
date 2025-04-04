@@ -22,8 +22,6 @@ public class MediaPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new TrackFragment(); // Первая вкладка — TrackFragment
             case 1:
-                return new AlbumFragment(); // Вторая вкладка — AlbumFragment
-            case 2:
                 return new PlaylistFragment(); // Третья вкладка — PlaylistFragment
             default:
                 return new TrackFragment(); // По умолчанию возвращаем TrackFragment
@@ -32,6 +30,6 @@ public class MediaPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3; // У нас три вкладки: Track, Album, Playlist
+        return 2; // У нас три вкладки: Track, Album, Playlist
     }
 }

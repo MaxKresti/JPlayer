@@ -12,24 +12,28 @@ import java.util.List;
 
 @Dao
 public interface PlaylistDao {
+
+    // Вставка плейлиста, если такого ещё нет
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Playlist playlist);
 
-    @Query("SELECT * FROM playlists WHERE user_id = :userId")
-    List<Playlist> getPlaylistsByUser(int userId);
-
-    @Query("SELECT * FROM playlists WHERE user_id = :userId")
-    List<Playlist> getPlaylistsByUserId(int userId);
-
-    @Query("SELECT * FROM playlists WHERE user_id = :userId")
-    LiveData<List<Playlist>> getPlaylistsByUserLive(int userId);
-
+    // Вставка с заменой, если уже есть плейлист с таким id
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertPlaylist(Playlist playlist);
+    void insertOrUpdate(Playlist playlist);
 
+    // Получение списка плейлистов текущего пользователя в LiveData для автоматического обновления
+    @Query("SELECT * FROM playlists WHERE user_id = :userId")
+    LiveData<List<Playlist>> getLivePlaylistsByUserId(int userId);
+
+    // Удаление
     @Delete
     void deletePlaylist(Playlist playlist);
 
+    // Обновление
     @Update
     void updatePlaylist(Playlist playlist);
+
+
+    @Query("SELECT * FROM playlists WHERE user_id = :userId")
+    LiveData<List<Playlist>> getPlaylistsByUserLive(int userId); // Этот метод должен возвращать LiveData
 }

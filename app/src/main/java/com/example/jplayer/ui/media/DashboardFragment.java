@@ -33,13 +33,10 @@ public class DashboardFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText("Track"); // Название первой вкладки
+                    tab.setText("Треки"); // Название первой вкладки
                     break;
                 case 1:
-                    tab.setText("Album"); // Название второй вкладки
-                    break;
-                case 2:
-                    tab.setText("Playlist"); // Название третьей вкладки
+                    tab.setText("Плейлисты"); // Название третьей вкладки
                     break;
             }
         }).attach();

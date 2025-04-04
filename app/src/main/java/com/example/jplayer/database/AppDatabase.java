@@ -9,10 +9,12 @@ import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.playlist.PlaylistDao;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.database.song.SongDao;
+import com.example.jplayer.database.songPlaylist.SongPlaylistCrossRef;
+import com.example.jplayer.database.songPlaylist.SongPlaylistDao;
 import com.example.jplayer.database.user.User;
 import com.example.jplayer.database.user.UserDao;
 
-@Database(entities = {User.class, Song.class, Playlist.class}, version = 4)
+@Database(entities = {User.class, Song.class, Playlist.class, SongPlaylistCrossRef.class}, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "Users.db";
     private static AppDatabase instance;
@@ -20,6 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract SongDao songDao();
     public abstract PlaylistDao playlistDao();
+    public abstract SongPlaylistDao songPlaylistDao();
 
     public static synchronized AppDatabase getInstance(Context context) {
         if (instance == null) {

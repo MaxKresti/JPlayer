@@ -48,6 +48,8 @@ public class EnterFragment extends Fragment {
                 if (rememberMe) {
                     saveUserSession(user.id, username);
                 }
+                ((LoginActivity) requireActivity()).saveUserId(user);
+
                 goToMainActivity();
             } else {
                 Toast.makeText(requireContext(), "Неверные учетные данные!", Toast.LENGTH_SHORT).show();

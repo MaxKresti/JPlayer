@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.example.jplayer.R;
-import java.io.File;
+import com.example.jplayer.database.playlist.Playlist;
 
 public class CreatePlaylistDialogFragment extends DialogFragment {
 
@@ -24,12 +25,11 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
     private EditText playlistNameEditText;
     private ImageView coverImageView;
     private Button cancelButton, confirmButton;
-
     private Uri selectedImageUri = null;
 
-    // Интерфейс обратного вызова для передачи данных созданного плейлиста
+    // Интерфейс обратного вызова с передачей объекта Playlist
     public interface OnPlaylistCreatedListener {
-        void onPlaylistCreated(String name, String coverImagePath);
+        void onPlaylistCreated(Playlist playlist);
     }
 
     private OnPlaylistCreatedListener listener;
@@ -41,10 +41,9 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Устанавливаем диалог на всю ширину экрана, высота - wrap_content
         if (getDialog() != null && getDialog().getWindow() != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            int width = LayoutParams.MATCH_PARENT;
+            int height = LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setLayout(width, height);
         }
     }
@@ -54,7 +53,6 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Инфлейтим макет диалога (оформленный под темный стиль)
         View view = inflater.inflate(R.layout.dialog_create_playlist, container, false);
 
         playlistNameEditText = view.findViewById(R.id.playlistNameEditText);
@@ -62,7 +60,6 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
         cancelButton = view.findViewById(R.id.cancelButton);
         confirmButton = view.findViewById(R.id.confirmButton);
 
-        // Обработчик клика на обложку: выбор изображения
         coverImageView.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -70,10 +67,8 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
-        // Кнопка "Отмена" просто закрывает диалог
         cancelButton.setOnClickListener(v -> dismiss());
 
-        // Кнопка "Создать" – проверяет введенное название, передает данные через слушатель и закрывает диалог
         confirmButton.setOnClickListener(v -> {
             String playlistName = playlistNameEditText.getText().toString().trim();
             if (TextUtils.isEmpty(playlistName)) {
@@ -82,8 +77,10 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
             }
             // Если выбран URI, сохраняем его строковое представление, иначе пустая строка
             String coverImagePath = selectedImageUri != null ? selectedImageUri.toString() : "";
+            // Создаем объект Playlist с userId = -1 (потом его переопределит вызывающий код)
+            Playlist newPlaylist = new Playlist(-1, playlistName, coverImagePath);
             if (listener != null) {
-                listener.onPlaylistCreated(playlistName, coverImagePath);
+                listener.onPlaylistCreated(newPlaylist);
             }
             dismiss();
         });
@@ -97,7 +94,6 @@ public class CreatePlaylistDialogFragment extends DialogFragment {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.getData();
             if (selectedImageUri != null) {
-                // Получаем постоянное разрешение на чтение (если требуется)
                 int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 requireContext().getContentResolver().takePersistableUriPermission(selectedImageUri, takeFlags);
                 coverImageView.setImageURI(selectedImageUri);

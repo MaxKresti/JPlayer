@@ -1,5 +1,7 @@
 package com.example.jplayer.ui.media.track;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import java.util.List;
 public class TrackFragment extends Fragment {
     private TrackAdapter trackAdapter;
     private TrackViewModel trackViewModel;
+    private int currentUserId;
 
     @Nullable
     @Override
@@ -38,7 +41,17 @@ public class TrackFragment extends Fragment {
 
         trackViewModel = new ViewModelProvider(this).get(TrackViewModel.class);
 
-        trackViewModel.getSongsByUser(1).observe(getViewLifecycleOwner(), this::updateTrackList);
+        // Получаем ID пользователя
+        currentUserId = getCurrentUserId();
+
+        if (currentUserId != -1) {
+            trackViewModel.getSongsByUser(currentUserId).observe(getViewLifecycleOwner(), this::updateTrackList);
+        }
+    }
+
+    private int getCurrentUserId() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        return prefs.getInt("user_id", -1);
     }
 
     private void updateTrackList(List<Song> tracks) {
