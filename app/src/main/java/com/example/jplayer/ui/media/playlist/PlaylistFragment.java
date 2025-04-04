@@ -25,46 +25,46 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
     private RecyclerView recyclerView;
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
-    private int currentUserId; // Теперь получаем динамически
+    private int currentUserId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
+
         recyclerView = view.findViewById(R.id.playlistRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter = new PlaylistAdapter(requireContext(), this);
         recyclerView.setAdapter(adapter);
 
-        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), this::updatePlaylistData);
+        // Получаем ID текущего пользователя
+        currentUserId = getCurrentUserId();
 
-        loadPlaylists();
+        // Инициализируем ViewModel
+        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
+
+        // Подписываемся на изменения в списке плейлистов
+        playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), playlists -> {
+            if (playlists != null) {
+                adapter.updateData(playlists);
+            } else {
+                Log.w("PlaylistFragment", "Плейлисты не найдены для пользователя " + currentUserId);
+            }
+        });
+
+        // Загружаем плейлисты для пользователя
+        if (currentUserId != -1) {
+            playlistViewModel.loadPlaylists(requireContext(), currentUserId);
+        } else {
+            Log.e("PlaylistFragment", "Ошибка: не удалось получить ID пользователя!");
+        }
+
         return view;
     }
 
-    private void loadPlaylists() {
-        SharedPreferences preferences = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
-        currentUserId = preferences.getInt("currentUserId", -1);
-
-        if (currentUserId == -1) {
-            Log.e("PlaylistFragment", "Не удалось получить currentUserId!");
-            return;
-        }
-
-        new Thread(() -> {
-            List<Playlist> playlists = AppDatabase.getInstance(requireContext())
-                    .playlistDao()
-                    .getPlaylistsByUserId(currentUserId);
-
-            requireActivity().runOnUiThread(() -> adapter.updateData(playlists));
-        }).start();
-    }
-
-
-    private void updatePlaylistData(List<Playlist> playlists) {
-        adapter.updateData(playlists);
+    private int getCurrentUserId() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        return prefs.getInt("user_id", -1);
     }
 
     @Override
@@ -84,15 +84,42 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         bottomSheet.setPosition(position);
         bottomSheet.setOnMenuItemClickListener(new PlaylistMenuSheetDialogFragment.OnMenuItemClickListener() {
             @Override
-            public void onRename(int position) {
+            public void onRename(int pos) {
                 // Логика переименования
             }
 
             @Override
-            public void onDelete(int position) {
+            public void onDelete(int pos) {
                 // Логика удаления
             }
         });
         bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
+    }
+
+    private void loadPlaylists() {
+        new Thread(() -> {
+            List<Playlist> playlists = AppDatabase.getInstance(requireContext())
+                    .playlistDao()
+                    .getPlaylistsByUserId(currentUserId);
+
+            requireActivity().runOnUiThread(() -> {
+                if (playlists != null) {
+                    adapter.updateData(playlists);
+                } else {
+                    Log.w("PlaylistFragment", "Плейлисты не найдены для пользователя " + currentUserId);
+                }
+            });
+        }).start();
+    }
+
+
+
+    // Добавим публичный метод, чтобы обновлять плейлисты извне
+    public void refreshPlaylists() {
+        if (currentUserId != -1) {
+            playlistViewModel.loadPlaylists(requireContext(), currentUserId);
+        }
+        loadPlaylists();
+
     }
 }

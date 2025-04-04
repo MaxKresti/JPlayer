@@ -50,8 +50,9 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             SharedPreferences prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("user_id", user.id);  // Сохраняем ID пользователя
+            editor.putInt("user_id", user.id);
             editor.apply();
         }
     }
+
 }
