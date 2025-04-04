@@ -24,12 +24,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.jplayer.R;
 import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.FragmentAddNewBinding;
 import com.example.jplayer.ui.CreatePlaylistDialogFragment;
+import com.example.jplayer.ui.media.playlist.PlaylistFragment;
+import com.example.jplayer.ui.media.playlist.PlaylistViewModel;
+
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -67,15 +72,29 @@ public class AddNewFragment extends Fragment {
         binding.addPlaylist.setOnClickListener(v -> {
             CreatePlaylistDialogFragment dialog = new CreatePlaylistDialogFragment();
             dialog.setOnPlaylistCreatedListener(playlist -> {
-                // Здесь создаем новый плейлист с правильным userId из SharedPreferences
-                int userId = getCurrentUserId(); // Метод, который возвращает текущий user_id
+                int userId = getCurrentUserId();
                 Playlist newPlaylist = new Playlist(userId, playlist.name, playlist.coverImage);
-                AppDatabase.getInstance(requireContext()).playlistDao().insert(newPlaylist);
-                Toast.makeText(requireContext(), "Плейлист создан: " + newPlaylist.name, Toast.LENGTH_SHORT).show();
-                // Обновление UI (если используете LiveData, оно само обновится)
+
+                new Thread(() -> {
+                    AppDatabase.getInstance(requireContext()).playlistDao().insert(newPlaylist);
+
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Плейлист создан: " + newPlaylist.name, Toast.LENGTH_SHORT).show();
+
+                        // Ищем PlaylistFragment по тегу и вызываем обновление
+                        PlaylistFragment playlistFragment = (PlaylistFragment) getParentFragmentManager()
+                                .findFragmentByTag("playlist_fragment");
+
+                        if (playlistFragment != null) {
+                            playlistFragment.refreshPlaylists();
+                        }
+                    });
+                }).start();
             });
             dialog.show(getChildFragmentManager(), "create_playlist_dialog");
         });
+
+
 
 
         return root;

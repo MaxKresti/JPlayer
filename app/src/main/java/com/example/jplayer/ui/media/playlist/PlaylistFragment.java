@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.adapters.PlaylistAdapter;
-import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.playlist.Playlist;
-import java.util.List;
 
 public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlaylistClickListener {
 
@@ -37,13 +35,10 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         adapter = new PlaylistAdapter(requireContext(), this);
         recyclerView.setAdapter(adapter);
 
-        // Получаем ID текущего пользователя
         currentUserId = getCurrentUserId();
 
-        // Инициализируем ViewModel
-        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
+        playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
-        // Подписываемся на изменения в списке плейлистов
         playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), playlists -> {
             if (playlists != null) {
                 adapter.updateData(playlists);
@@ -52,7 +47,6 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
             }
         });
 
-        // Загружаем плейлисты для пользователя
         if (currentUserId != -1) {
             playlistViewModel.loadPlaylists(requireContext(), currentUserId);
         } else {
@@ -96,30 +90,9 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
     }
 
-    private void loadPlaylists() {
-        new Thread(() -> {
-            List<Playlist> playlists = AppDatabase.getInstance(requireContext())
-                    .playlistDao()
-                    .getPlaylistsByUserId(currentUserId);
-
-            requireActivity().runOnUiThread(() -> {
-                if (playlists != null) {
-                    adapter.updateData(playlists);
-                } else {
-                    Log.w("PlaylistFragment", "Плейлисты не найдены для пользователя " + currentUserId);
-                }
-            });
-        }).start();
-    }
-
-
-
-    // Добавим публичный метод, чтобы обновлять плейлисты извне
     public void refreshPlaylists() {
         if (currentUserId != -1) {
             playlistViewModel.loadPlaylists(requireContext(), currentUserId);
         }
-        loadPlaylists();
-
     }
 }

@@ -1,26 +1,36 @@
 package com.example.jplayer.ui.media.playlist;
 
+import android.app.Application;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+
 import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.playlist.Playlist;
+
 import java.util.List;
 
-public class PlaylistViewModel extends ViewModel {
-    private final MutableLiveData<List<Playlist>> playlistsLiveData = new MutableLiveData<>();
+public class PlaylistViewModel extends AndroidViewModel {
 
-    public LiveData<List<Playlist>> getPlaylistsLiveData() {
-        return playlistsLiveData;
+    private MutableLiveData<List<Playlist>> playlistsLiveData = new MutableLiveData<>();
+
+    public PlaylistViewModel(@NonNull Application application) {
+        super(application);
     }
 
     public void loadPlaylists(Context context, int userId) {
-        new Thread(() -> {
-            List<Playlist> playlists = AppDatabase.getInstance(context)
-                    .playlistDao()
-                    .getPlaylistsByUserId(userId);
-            playlistsLiveData.postValue(playlists);
-        }).start();
+        AppDatabase.getInstance(context)
+                .playlistDao()
+                .getPlaylistsByUserLive(userId)
+                .observeForever(playlists -> {
+                    playlistsLiveData.postValue(playlists);
+                });
+    }
+
+    public LiveData<List<Playlist>> getPlaylistsLiveData() {
+        return playlistsLiveData;
     }
 }
