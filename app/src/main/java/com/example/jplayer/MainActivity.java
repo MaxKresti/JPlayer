@@ -256,7 +256,11 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
+
                 .setCustomAnimations(0, 0)
+
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+
                 .replace(R.id.nav_host_fragment_activity_main, fullPlayerFragment, "full_player_fragment")
                 .addToBackStack(null)
                 .commit();
@@ -368,7 +372,9 @@ public class MainActivity extends AppCompatActivity {
         }
         setBottomNavigationVisibility(false);
         getSupportFragmentManager().beginTransaction()
+
                 .setCustomAnimations(0, 0)
+
                 .replace(R.id.SettingContainer, settingFragment)
                 .addToBackStack(null)
                 .commit();
@@ -421,7 +427,13 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
+
                 .setCustomAnimations(0, 0)
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.playlistAlbumContainer, fragment, "playlist_album_fragment")
+                .addToBackStack(null)
+
+
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.playlistAlbumContainer, fragment, "playlist_album_fragment")
                 .addToBackStack(null)

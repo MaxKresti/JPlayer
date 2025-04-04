@@ -94,8 +94,11 @@
                     <!-- Кнопка "Play" -->
                     <ImageView
                         android:id="@+id/play"
+
                         android:layout_width="38dp"
                         android:layout_height="38dp"
+
+
                         android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/play" />

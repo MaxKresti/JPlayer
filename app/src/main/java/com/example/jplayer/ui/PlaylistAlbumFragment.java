@@ -132,14 +132,19 @@ public class PlaylistAlbumFragment extends Fragment {
 
     private void playTrack() {
         // Логика для начала воспроизведения трека плейлиста
+
         animateButton(binding.play, R.drawable.pause); // Здесь замените на нужную иконку паузы
+
+
         binding.play.setTag("playing");
         // Добавьте вызов логики для воспроизведения трека
     }
 
     private void pauseTrack() {
         // Логика для паузы трека плейлиста
+
         animateButton(binding.play, R.drawable.play); // Здесь замените на нужную иконку воспроизведения
+
         binding.play.setTag("paused");
         // Добавьте вызов логики для постановки трека на паузу
     }
