@@ -2,7 +2,9 @@ package com.example.jplayer.ui.media.add_new;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +12,6 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,19 +23,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.jplayer.R;
 import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.FragmentAddNewBinding;
-import com.example.jplayer.ui.CreatePlaylistDialogFragment; // Если класс находится в этом пакете, или используйте полное имя
-import androidx.appcompat.app.AlertDialog;
-// Если нужно, уточните путь
+import com.example.jplayer.ui.CreatePlaylistDialogFragment;
+import com.example.jplayer.ui.media.playlist.PlaylistFragment;
+import com.example.jplayer.ui.media.playlist.PlaylistViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class NotificationsFragment extends Fragment {
+public class AddNewFragment extends Fragment {
 
     private FragmentAddNewBinding binding;
     private AppDatabase db;
@@ -50,6 +54,11 @@ public class NotificationsFragment extends Fragment {
         db = AppDatabase.getInstance(requireContext());
         currentUserId = getCurrentUserId();
 
+        if (currentUserId == -1) {
+            showToast("Ошибка: не удалось получить ID пользователя");
+            return root;
+        }
+
         // Настройка анимации для кнопок
         setupImageAnimation(binding.newTrack);
         setupImageAnimation(binding.newAlbum);
@@ -57,22 +66,40 @@ public class NotificationsFragment extends Fragment {
 
         // Обработчик для добавления трека
         binding.addTrack.setOnClickListener(v -> openFileChooser());
+
+        // Обработчик для создания плейлиста
         // Обработчик для создания плейлиста
         binding.addPlaylist.setOnClickListener(v -> {
             CreatePlaylistDialogFragment dialog = new CreatePlaylistDialogFragment();
-            dialog.setOnPlaylistCreatedListener((name, coverImagePath) -> {
-                // Создаем новый плейлист и сохраняем его в БД с учетом ID пользователя
-                Playlist playlist = new Playlist(currentUserId, name, coverImagePath);
-                AppDatabase.getInstance(requireContext()).playlistDao().insert(playlist);
-                Toast.makeText(requireContext(), "Плейлист создан: " + name, Toast.LENGTH_SHORT).show();
+            dialog.setOnPlaylistCreatedListener(playlist -> {
+                int userId = getCurrentUserId();
+                Playlist newPlaylist = new Playlist(userId, playlist.name, playlist.coverImage);
+
+                new Thread(() -> {
+                    AppDatabase.getInstance(requireContext()).playlistDao().insert(newPlaylist);
+
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Плейлист создан: " + newPlaylist.name, Toast.LENGTH_SHORT).show();
+
+                        // Ищем PlaylistFragment по тегу и вызываем обновление
+                        PlaylistFragment playlistFragment = (PlaylistFragment) getParentFragmentManager()
+                                .findFragmentByTag("playlist_fragment");
+
+                        if (playlistFragment != null) {
+                            playlistFragment.refreshPlaylists();
+                        }
+                    });
+                }).start();
             });
             dialog.show(getChildFragmentManager(), "create_playlist_dialog");
         });
 
+
+
+
         return root;
     }
 
-    // Метод для настройки анимации кнопок
     private void setupImageAnimation(ImageView imageView) {
         Animation scaleDown = AnimationUtils.loadAnimation(requireContext(), R.anim.smaller);
         Animation scaleUp = AnimationUtils.loadAnimation(requireContext(), R.anim.bigger);
@@ -98,6 +125,18 @@ public class NotificationsFragment extends Fragment {
         startActivityForResult(intent, PICK_AUDIO_FILE);
     }
 
+    private void openCreatePlaylistDialog() {
+        CreatePlaylistDialogFragment dialog = new CreatePlaylistDialogFragment();
+        dialog.setOnPlaylistCreatedListener(playlist -> {
+            // Сохраняем плейлист в базу данных (например, через App    Database)
+            AppDatabase.getInstance(requireContext()).playlistDao().insert(playlist);
+            Toast.makeText(requireContext(), "Плейлист создан: " + playlist.name, Toast.LENGTH_SHORT).show();
+            // Если нужно – обновляем UI (например, обновляем список плейлистов)
+        });
+        dialog.show(getChildFragmentManager(), "create_playlist_dialog");
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -105,10 +144,9 @@ public class NotificationsFragment extends Fragment {
             Uri uri = data.getData();
             if (uri != null) {
                 // Сохраняем постоянное разрешение на доступ к URI
-                final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION &
-                        (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                requireContext().getContentResolver().takePersistableUriPermission(uri, takeFlags);
-
+                requireContext().getContentResolver().takePersistableUriPermission(
+                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                );
                 processSelectedFile(uri);
             }
         }
@@ -118,41 +156,32 @@ public class NotificationsFragment extends Fragment {
         try (MediaMetadataRetriever mmr = new MediaMetadataRetriever()) {
             mmr.setDataSource(requireContext(), uri);
 
-            String title = extractMetadata(mmr, MediaMetadataRetriever.METADATA_KEY_TITLE);
-            String artist = extractMetadata(mmr, MediaMetadataRetriever.METADATA_KEY_ARTIST);
-            String album = extractMetadata(mmr, MediaMetadataRetriever.METADATA_KEY_ALBUM);
+            String title = extractMetadata(mmr, MediaMetadataRetriever.METADATA_KEY_TITLE, getFileName(uri));
+            String artist = extractMetadata(mmr, MediaMetadataRetriever.METADATA_KEY_ARTIST, "Unknown Artist");
+            String album = extractMetadata(mmr, MediaMetadataRetriever.METADATA_KEY_ALBUM, "Unknown Album");
             long duration = extractDuration(mmr);
-            String fileName = getFileName(uri);
-
-            Bitmap cover = extractCoverArt(mmr);
-            String coverPath = saveCoverArt(cover);
+            String coverPath = saveCoverArt(extractCoverArt(mmr));
 
             Song song = new Song(
-                    currentUserId,
-                    !title.isEmpty() ? title : fileName,
-                    !artist.isEmpty() ? artist : "Unknown Artist",
-                    !album.isEmpty() ? album : "Unknown Album",
-                    duration,
-                    uri.toString(),
-                    coverPath
+                    currentUserId, title, artist, album, duration, uri.toString(), coverPath
             );
 
             if (db.songDao().checkSongExists(uri.toString(), currentUserId) == 0) {
                 db.songDao().insert(song);
-                Toast.makeText(requireContext(), "Трек добавлен: " + song.title, Toast.LENGTH_SHORT).show();
+                showToast("Трек добавлен: " + song.title);
             } else {
-                Toast.makeText(requireContext(), "Трек уже существует", Toast.LENGTH_SHORT).show();
+                showToast("Трек уже существует");
             }
 
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Ошибка обработки файла", Toast.LENGTH_SHORT).show();
+            showToast("Ошибка обработки файла");
             e.printStackTrace();
         }
     }
 
-    private String extractMetadata(MediaMetadataRetriever mmr, int key) {
+    private String extractMetadata(MediaMetadataRetriever mmr, int key, String defaultValue) {
         String value = mmr.extractMetadata(key);
-        return value != null ? value.trim() : "";
+        return value != null ? value.trim() : defaultValue;
     }
 
     private long extractDuration(MediaMetadataRetriever mmr) {
@@ -165,27 +194,20 @@ public class NotificationsFragment extends Fragment {
 
     private Bitmap extractCoverArt(MediaMetadataRetriever mmr) {
         byte[] artBytes = mmr.getEmbeddedPicture();
-        if (artBytes != null) {
-            return BitmapFactory.decodeByteArray(artBytes, 0, artBytes.length);
-        }
-        return null;
+        return (artBytes != null) ? BitmapFactory.decodeByteArray(artBytes, 0, artBytes.length) : null;
     }
 
     @SuppressLint("Range")
     private String getFileName(Uri uri) {
         String result = null;
-        if (uri.getScheme().equals("content")) {
-            try (Cursor cursor = requireContext().getContentResolver()
-                    .query(uri, null, null, null, null)) {
+        if ("content".equals(uri.getScheme())) {
+            try (Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
             }
         }
-        if (result == null) {
-            result = uri.getLastPathSegment();
-        }
-        return result != null ? result : "unknown_file";
+        return (result != null) ? result : uri.getLastPathSegment();
     }
 
     private String saveCoverArt(Bitmap bitmap) {
@@ -208,8 +230,8 @@ public class NotificationsFragment extends Fragment {
     }
 
     private int getCurrentUserId() {
-        // Здесь ваша логика получения ID пользователя (например, из SharedPreferences)
-        return 1; // Временная заглушка
+        SharedPreferences prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        return prefs.getInt("user_id", -1);
     }
 
     private void showToast(String message) {

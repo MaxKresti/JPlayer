@@ -23,7 +23,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     private final OnPlaylistClickListener listener;
 
     public interface OnPlaylistClickListener {
-        void onPlaylistClick(int playlistId);
+        void onPlaylistClick(Playlist playlist);
         void onPlaylistMenuClick(View view, int position);
     }
 
@@ -48,26 +48,24 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist playlist = playlists.get(position);
 
-        if (holder.playlistName != null) {
-            holder.playlistName.setText(playlist.name);
-        } else {
-            Log.e("PlaylistAdapter", "playlistName is null!");
-        }
+        holder.playlistName.setText(playlist.name);
 
-        // Используем Glide для загрузки изображения
         if (playlist.coverImage != null && !playlist.coverImage.isEmpty()) {
-            Glide.with(context)
-                    .load(Uri.parse(playlist.coverImage))
-                    .placeholder(R.drawable.image)
-                    .error(R.drawable.image)
-                    .into(holder.coverImage);
+            try {
+                Glide.with(context)
+                        .load(Uri.parse(playlist.coverImage))
+                        .placeholder(R.drawable.image)
+                        .error(R.drawable.image)
+                        .into(holder.coverImage);
+            } catch (Exception e) {
+                Log.e("PlaylistAdapter", "Ошибка загрузки обложки: " + e.getMessage());
+                holder.coverImage.setImageResource(R.drawable.image);
+            }
         } else {
             holder.coverImage.setImageResource(R.drawable.image);
         }
 
-        Log.d("PlaylistAdapter", "Binding playlist: " + playlist.name);
-
-        holder.coverImage.setOnClickListener(v -> listener.onPlaylistClick(playlist.id));
+        holder.coverImage.setOnClickListener(v -> listener.onPlaylistClick(playlist));
         holder.menuButton.setOnClickListener(v -> listener.onPlaylistMenuClick(v, position));
     }
 
@@ -82,7 +80,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
         public PlaylistViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Убедитесь, что в item_playlist.xml установлены следующие ID:
             playlistName = itemView.findViewById(R.id.playlistName);
             coverImage = itemView.findViewById(R.id.playlistImage);
             menuButton = itemView.findViewById(R.id.playlistMenu);

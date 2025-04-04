@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/navigation_add_new"
-    android:name="com.example.jplayer.ui.media.add_new.NotificationsFragment"
+    android:name="com.example.jplayer.ui.media.add_new.AddNewFragment"
     android:label="@string/title_add_new"
     tools:layout="@layout/fragment_add_new" />
 </navigation>

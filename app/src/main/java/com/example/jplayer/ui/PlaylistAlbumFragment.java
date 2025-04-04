@@ -1,5 +1,6 @@
 package com.example.jplayer.ui;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -9,23 +10,22 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import com.bumptech.glide.Glide;
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.databinding.FragmentPlaylistAlbumBinding;
 import com.example.jplayer.ui.media.track.TrackMenuSheetDialogFragment;
 
+import java.io.File;
+
 public class PlaylistAlbumFragment extends Fragment {
 
-    private ImageView backButton;
-    private ImageView playPauseButton;
-    private ImageView remixButton;
-    private boolean isPlaying = false;
-
+    private String playlistName;
+    private String playlistImage;
+    private int playlistId;
     private FragmentPlaylistAlbumBinding binding;
 
     @Nullable
@@ -34,50 +34,46 @@ public class PlaylistAlbumFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaylistAlbumBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        view.setClickable(true);
 
-        // Инициализация элементов UI через binding
-        backButton = binding.back;
-        playPauseButton = binding.play;
+        // Инициализация UI-элементов через binding
+        binding.back.setOnClickListener(v -> closePlaylistAlbum());
+        binding.play.setOnClickListener(v -> togglePlayPause());
 
-        // Обработка клика на кнопку "Назад"
-        backButton.setOnClickListener(v -> closePlaylistAlbum());
-
-        // Обработка клика на кнопку воспроизведения/паузы
-        playPauseButton.setOnClickListener(v -> togglePlayPause());
+        // Если в контейнере с треками уже есть элементы, назначаем контекстное меню для каждого
+        setupTracksClickListeners();
 
         return view;
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Получаем данные из аргументов
+        if (getArguments() != null) {
+            playlistId = getArguments().getInt("playlistId", -1);
+            playlistName = getArguments().getString("playlistName", "Плейлист");
+            playlistImage = getArguments().getString("playlistImage", "");
+        }
+    }
+
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Находим контейнер с треками
-        LinearLayout tracksContainer = binding.tracksContainer;
-
-        // Перебираем все элементы треков
-        for (int i = 0; i < tracksContainer.getChildCount(); i++) {
-            View trackItem = tracksContainer.getChildAt(i);
-            ImageView trackImage = trackItem.findViewById(R.id.trackImage);
-            ImageView trackMenu = trackItem.findViewById(R.id.trackMenu);
-
-            // Создаем финальную копию переменной i
-            final int position = i;
-
-            // Обработка клика на кнопку с тремя точками
-            if (trackMenu != null) {
-                trackMenu.setOnClickListener(v -> showContextMenu(v, position));
-            }
-
-            // Обработка клика на изображение трека
-            if (trackImage != null) {
-                trackImage.setOnClickListener(v -> {
-                    // Логика при нажатии на трек
-                });
-            }
+        // Обновляем UI данными плейлиста
+        binding.playlistTitle.setText(playlistName);
+        if (playlistImage != null && !playlistImage.isEmpty()) {
+            Glide.with(this)
+                    .load(Uri.parse(playlistImage))
+                    .placeholder(R.drawable.image)
+                    .error(R.drawable.image)
+                    .into(binding.playlistCover);
+        } else {
+            binding.playlistCover.setImageResource(R.drawable.image);
         }
 
-        // Обработка кнопки "Назад" на устройстве
+        // Обработка кнопки "Назад" устройства
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -90,11 +86,34 @@ public class PlaylistAlbumFragment extends Fragment {
     }
 
     /**
-     * Закрывает PlaylistAlbumFragment.
+     * Назначает обработчики кликов для каждого элемента трека в контейнере.
+     * Если необходимо, здесь можно настроить RecyclerView для треков.
+     */
+    private void setupTracksClickListeners() {
+        LinearLayout tracksContainer = binding.tracksContainer;
+        if (tracksContainer == null) return;
+        for (int i = 0; i < tracksContainer.getChildCount(); i++) {
+            View trackItem = tracksContainer.getChildAt(i);
+            ImageView trackMenu = trackItem.findViewById(R.id.trackMenu);
+            ImageView trackImage = trackItem.findViewById(R.id.trackImage);
+            final int position = i;
+            if (trackMenu != null) {
+                trackMenu.setOnClickListener(v -> showContextMenu(v, position));
+            }
+            if (trackImage != null) {
+                trackImage.setOnClickListener(v -> {
+                    // Здесь можно реализовать воспроизведение выбранного трека
+                });
+            }
+        }
+    }
+
+    /**
+     * Закрывает PlaylistAlbumFragment, вызывая метод из MainActivity.
      */
     private void closePlaylistAlbum() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hidePlaylistAlbum(); // Закрываем PlaylistAlbumFragment
+            ((MainActivity) getActivity()).hidePlaylistAlbum();
         }
     }
 
@@ -102,84 +121,64 @@ public class PlaylistAlbumFragment extends Fragment {
      * Переключает воспроизведение и паузу.
      */
     private void togglePlayPause() {
-        if (isPlaying) {
-            // Если трек играет, ставим на паузу
+        // Здесь нужно добавить логику воспроизведения/паузы трека для плейлиста.
+        // Пример анимации для смены иконки:
+        if (binding.play.getTag() != null && binding.play.getTag().equals("playing")) {
             pauseTrack();
         } else {
-            // Если трек на паузе, воспроизводим
             playTrack();
         }
     }
 
     private void playTrack() {
-        isPlaying = true;
-        // Анимация смены иконки
-        Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
-        Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
-
-        scaleUp.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.play); // Меняем иконку на паузу
-                playPauseButton.startAnimation(scaleDown);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        playPauseButton.startAnimation(scaleUp);
-        // Здесь добавьте логику для начала воспроизведения трека
+        // Логика для начала воспроизведения трека плейлиста
+        animateButton(binding.play, R.drawable.pause); // Здесь замените на нужную иконку паузы
+        binding.play.setTag("playing");
+        // Добавьте вызов логики для воспроизведения трека
     }
 
     private void pauseTrack() {
-        isPlaying = false;
-        // Анимация смены иконки
-        Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
-        Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
-
-        scaleUp.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                playPauseButton.setImageResource(R.drawable.pause); // Меняем иконку на воспроизведение
-                playPauseButton.startAnimation(scaleDown);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        playPauseButton.startAnimation(scaleUp);
-        // Здесь добавьте логику для паузы трека
+        // Логика для паузы трека плейлиста
+        animateButton(binding.play, R.drawable.play); // Здесь замените на нужную иконку воспроизведения
+        binding.play.setTag("paused");
+        // Добавьте вызов логики для постановки трека на паузу
     }
 
+    /**
+     * Выполняет анимацию смены иконки на переданном ImageView.
+     */
+    private void animateButton(ImageView button, int newIcon) {
+        Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
+        Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+        scaleUp.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation animation) { }
+            @Override public void onAnimationEnd(Animation animation) {
+                button.setImageResource(newIcon);
+                button.startAnimation(scaleDown);
+            }
+            @Override public void onAnimationRepeat(Animation animation) { }
+        });
+        button.startAnimation(scaleUp);
+    }
+
+    /**
+     * Показывает контекстное меню для трека.
+     */
     private void showContextMenu(View anchorView, int position) {
         TrackMenuSheetDialogFragment bottomSheet = new TrackMenuSheetDialogFragment();
         bottomSheet.setPosition(position);
         bottomSheet.setOnMenuItemClickListener(new TrackMenuSheetDialogFragment.OnMenuItemClickListener() {
             @Override
             public void onAddToPlaylist(int position) {
-                // Обработка добавления в плейлист
+                // Обработка добавления трека в плейлист
             }
-
             @Override
             public void onRename(int position) {
-                // Обработка переименования
+                // Обработка переименования трека
             }
-
             @Override
             public void onDelete(int position) {
-                // Обработка удаления
+                // Обработка удаления трека
             }
         });
         bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());

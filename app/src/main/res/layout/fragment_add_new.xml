@@ -46,9 +46,9 @@
                 android:layout_weight="1"
                 android:layout_marginTop="15dp"
                 android:contentDescription="add_new_track"
-                android:text="Add new track"
+                android:text="Добавить новый трек"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
 
@@ -59,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="4dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="invisible">
 
             <ImageView
                 android:id="@+id/new_album"
@@ -93,15 +94,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
-
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/new_playlist"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:clickable="true"
-                android:focusable="true"
+
                 style="@style/ImageButtonStyle"
                 android:contentDescription="add_new_playlist"
                 android:layout_marginEnd="16dp"
@@ -112,13 +113,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
+
                 android:layout_marginTop="15dp"
                 android:contentDescription="add_new_playlist"
-                android:text="Add new playlist"
+                android:text="Создать новый плейлист"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
     </LinearLayout>

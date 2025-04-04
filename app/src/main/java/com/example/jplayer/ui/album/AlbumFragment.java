@@ -43,18 +43,18 @@ public class AlbumFragment extends Fragment {
             albumMenu.setOnClickListener(v -> showContextMenu(v, position));
 
             // Обработка клика на изображение альбома
-            albumImage.setOnClickListener(v -> openPlaylistAlbumFragment());
+//            albumImage.setOnClickListener(v -> openPlaylistAlbumFragment());
         }
     }
 
     /**
      * Открывает PlaylistAlbumFragment.
      */
-    private void openPlaylistAlbumFragment() {
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
-        }
-    }
+//    private void openPlaylistAlbumFragment() {
+//        if (getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).showPlaylistAlbum(); // Используем метод из MainActivity
+//        }
+//    }
 
     /**
      * Показывает контекстное меню для альбома.

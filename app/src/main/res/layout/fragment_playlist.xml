@@ -15,7 +15,7 @@
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_background"
         android:orientation="horizontal"
-        android:padding="14dp"
+        android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,10 +32,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="   Search playlists..."
+            android:hint="Поиск по плейлистам"
             android:textColor="#FFFFFF"
             android:textColorHint="#A0A0A0"
             android:background="@null"
+            android:layout_marginLeft="10dp"
             android:imeOptions="actionSearch"
             android:maxLines="1"/>
     </LinearLayout>
@@ -46,8 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-
-        android:text="MY PLAYLISTS"
+        android:text="МОИ ПЛЕЙЛИСТЫ"
         android:textColor="#FFFFFF"
         android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
