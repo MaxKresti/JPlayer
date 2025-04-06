@@ -78,7 +78,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
                 dialog.setOnMenuItemClickListener(new TrackMenuSheetDialogFragment.OnMenuItemClickListener() {
                     @Override
                     public void onAddToPlaylist(int pos) {
-                        // Реализуйте логику добавления в плейлист
+                        Song track = trackList.get(pos);
+                        if (context instanceof MainActivity) {
+                            ((MainActivity) context).showAddToPlaylistDialog(track);
+                        }
                     }
                     @Override
                     public void onRename(int pos) {

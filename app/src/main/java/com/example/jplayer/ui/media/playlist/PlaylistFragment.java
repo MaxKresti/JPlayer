@@ -17,6 +17,8 @@ import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.adapters.PlaylistAdapter;
 import com.example.jplayer.database.playlist.Playlist;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.List;
 
 public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlaylistClickListener {
 
@@ -27,7 +29,8 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
 
         recyclerView = view.findViewById(R.id.playlistRecyclerView);
@@ -35,10 +38,14 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         adapter = new PlaylistAdapter(requireContext(), this);
         recyclerView.setAdapter(adapter);
 
+        // Получаем ID текущего пользователя из SharedPreferences
         currentUserId = getCurrentUserId();
 
+        // Инициализируем ViewModel, привязанную к Activity (чтобы данные обновлялись везде)
         playlistViewModel = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        playlistViewModel.loadPlaylists(requireContext(), currentUserId);
 
+        // Подписываемся на изменения LiveData
         playlistViewModel.getPlaylistsLiveData().observe(getViewLifecycleOwner(), playlists -> {
             if (playlists != null) {
                 adapter.updateData(playlists);
@@ -46,12 +53,6 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
                 Log.w("PlaylistFragment", "Плейлисты не найдены для пользователя " + currentUserId);
             }
         });
-
-        if (currentUserId != -1) {
-            playlistViewModel.loadPlaylists(requireContext(), currentUserId);
-        } else {
-            Log.e("PlaylistFragment", "Ошибка: не удалось получить ID пользователя!");
-        }
 
         return view;
     }
@@ -90,6 +91,7 @@ public class PlaylistFragment extends Fragment implements PlaylistAdapter.OnPlay
         bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
     }
 
+    // Метод для обновления списка извне (если нужно)
     public void refreshPlaylists() {
         if (currentUserId != -1) {
             playlistViewModel.loadPlaylists(requireContext(), currentUserId);
