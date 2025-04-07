@@ -40,9 +40,13 @@ public class Song {
     @ColumnInfo(name = "cover_art")
     public String coverArt;
 
+    @ColumnInfo(name = "is_favorite")
+    public boolean isFavorite;
+
+
     // Конструктор
     public Song(int userId, String title, String artist, String album,
-                long duration, String filePath, String coverArt) {
+                long duration, String filePath, String coverArt, boolean isFavorite) {
         this.userId = userId;
         this.title = title;
         this.artist = artist;
@@ -50,5 +54,6 @@ public class Song {
         this.duration = duration;
         this.filePath = filePath;
         this.coverArt = coverArt;
+        this.isFavorite = isFavorite;
     }
 }

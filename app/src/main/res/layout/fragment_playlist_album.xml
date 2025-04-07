@@ -29,6 +29,7 @@
                 android:layout_height="300dp"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/image"
+                android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"/>
 
             <ImageView
@@ -95,24 +96,13 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- 3. Список треков -->
-    <androidx.core.widget.NestedScrollView
+    <!-- 3. Список треков через RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistTracksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:id="@+id/tracksContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="?attr/actionBarSize"> <!-- Отступ для sticky-панели -->
-
-            <!-- Треки -->
-            <include layout="@layout/item_track" android:id="@+id/track1"/>
-            <include layout="@layout/item_track" android:id="@+id/track2"/>
-
-            <!-- ... -->
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        android:background="#272727"
+        android:clipToPadding="false"
+        android:paddingTop="?attr/actionBarSize"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

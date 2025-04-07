@@ -7,13 +7,12 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-
 import java.util.List;
 
 @Dao
 public interface PlaylistDao {
 
-    // Вставка плейлиста, если такого ещё нет
+    // Вставка плейлиста (игнорируя конфликт)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Playlist playlist);
 
@@ -21,19 +20,27 @@ public interface PlaylistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdate(Playlist playlist);
 
-    // Получение списка плейлистов текущего пользователя в LiveData для автоматического обновления
-    @Query("SELECT * FROM playlists WHERE user_id = :userId")
+    // Получение списка плейлистов текущего пользователя с использованием LiveData,
+    // при этом плейлист с именем "Loved Tracks" будет всегда на первом месте
+    @Query("SELECT * FROM playlists WHERE user_id = :userId ORDER BY CASE WHEN name = 'Loved Tracks' THEN 0 ELSE 1 END, name ASC")
     LiveData<List<Playlist>> getLivePlaylistsByUserId(int userId);
 
-    // Удаление
+    // Получение плейлиста по имени и ID пользователя (например, для проверки существования плейлиста "Loved Tracks")
+    @Query("SELECT * FROM playlists WHERE user_id = :userId AND name = :playlistName LIMIT 1")
+    Playlist getPlaylistByUserIdAndName(int userId, String playlistName);
+
+    @Query("SELECT * FROM playlists WHERE user_id = :userId ORDER BY CASE WHEN name = 'Loved Tracks' THEN 0 ELSE 1 END, name ASC")
+    LiveData<List<Playlist>> getLivePlaylistsByUserLive(int userId);
+
+    // Удаление плейлиста
     @Delete
     void deletePlaylist(Playlist playlist);
 
-    // Обновление
+    // Обновление плейлиста
     @Update
     void updatePlaylist(Playlist playlist);
 
+    @Query("SELECT * FROM playlists WHERE user_id = :userId ORDER BY CASE WHEN name = 'Loved Tracks' THEN 0 ELSE 1 END, name ASC")
+    List<Playlist> getPlaylistsByUserId(int userId);  // <-- обычный List, без LiveData
 
-    @Query("SELECT * FROM playlists WHERE user_id = :userId")
-    LiveData<List<Playlist>> getPlaylistsByUserLive(int userId); // Этот метод должен возвращать LiveData
 }

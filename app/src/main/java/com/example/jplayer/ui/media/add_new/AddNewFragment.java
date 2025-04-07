@@ -163,7 +163,7 @@ public class AddNewFragment extends Fragment {
             String coverPath = saveCoverArt(extractCoverArt(mmr));
 
             Song song = new Song(
-                    currentUserId, title, artist, album, duration, uri.toString(), coverPath
+                    currentUserId, title, artist, album, duration, uri.toString(), coverPath, false
             );
 
             if (db.songDao().checkSongExists(uri.toString(), currentUserId) == 0) {
