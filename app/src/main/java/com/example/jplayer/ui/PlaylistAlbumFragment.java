@@ -12,12 +12,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.databinding.FragmentPlaylistAlbumBinding;
 import com.example.jplayer.ui.media.track.TrackMenuSheetDialogFragment;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.io.File;
 
@@ -61,6 +64,15 @@ public class PlaylistAlbumFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        AppBarLayout appBarLayout = view.findViewById(R.id.appBarLayout);
+
+
+        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+            float alpha = 1 - Math.abs(verticalOffset / (float) appBarLayout1.getTotalScrollRange());
+            binding.playlistCover.setAlpha(alpha);
+        });
+
         // Обновляем UI данными плейлиста
         binding.playlistTitle.setText(playlistName);
         if (playlistImage != null && !playlistImage.isEmpty()) {
@@ -83,6 +95,11 @@ public class PlaylistAlbumFragment extends Fragment {
             }
             return false;
         });
+
+        // Инициализация кликов для кнопок
+
+        binding.play.setOnClickListener(v -> togglePlayPause());
+        binding.back.setOnClickListener(v -> closePlaylistAlbum());
     }
 
     /**

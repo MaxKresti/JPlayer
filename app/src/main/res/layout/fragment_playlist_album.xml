@@ -1,149 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/play_op"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#272727"
     tools:context=".ui.PlaylistAlbumFragment">
 
-    <LinearLayout
+    <!-- 1. AppBarLayout для обложки -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#272727"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true">
 
-        <!-- Верхняя часть (изображение, название, кнопки) -->
-        <LinearLayout
+        <!-- Обложка (будет скрываться) -->
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="#272727">
+            android:layout_height="320dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@android:color/transparent">
 
-            <!-- Кнопка "Назад" -->
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="21dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="35dp"
-                android:rotation="270"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="back"
-                android:scaleType="fitXY"
-                android:src="@drawable/back" />
-
-            <!-- Изображение плейлиста -->
             <ImageView
                 android:id="@+id/playlistCover"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:elevation="8dp"
+                android:layout_marginTop="20dp"
                 android:src="@drawable/image"
-                android:layout_marginTop="-32dp"
-                app:layout_constraintTop_toBottomOf="@id/back" />
+                app:layout_collapseMode="parallax"/>
 
-            <!-- Панель с названием и кнопками -->
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:rotation="270"
+                android:src="@drawable/back"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <!-- 2. Панель управления (останется прилипшей) -->
+        <LinearLayout
+            android:id="@+id/stickyPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#272727"
+            android:padding="12dp"
+            app:layout_scrollFlags="enterAlways|snap">
+
+            <!-- Горизонтальная компоновка названия и кнопок -->
             <LinearLayout
-                android:id="@+id/panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
+                <!-- Название плейлиста -->
+                <TextView
+                    android:id="@+id/playlistTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Название плейлиста"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
+
+                <!-- Контейнер для кнопок -->
                 <LinearLayout
                     android:id="@+id/buttons"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="16dp">
 
-                    <!-- Название плейлиста -->
-                    <TextView
-                        android:id="@+id/playlistTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="190dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Name"
-                        android:textColor="#FFFFFF"
-                        android:textSize="24dp"
-                        android:textStyle="bold" />
-
-                    <!-- Кнопка "Remix" -->
                     <ImageView
                         android:id="@+id/random"
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginStart="-30dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:contentDescription="remix"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/remix" />
+                        android:src="@drawable/remix"/>
 
-                    <!-- Кнопка "Play" -->
                     <ImageView
                         android:id="@+id/play"
-
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-
-
-                        android:layout_marginRight="10dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/play" />
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/play"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <ScrollView
-            android:id="@+id/scrollViewTracks"
+    <!-- 3. Список треков -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/tracksContainer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:background="#272727">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="?attr/actionBarSize"> <!-- Отступ для sticky-панели -->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <!-- Треки -->
+            <include layout="@layout/item_track" android:id="@+id/track1"/>
+            <include layout="@layout/item_track" android:id="@+id/track2"/>
 
-                <!-- Контейнер для треков -->
-                <LinearLayout
-                    android:id="@+id/tracksContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp">
-
-                    <!-- Примеры треков, которые можно динамически заменить -->
-                    <include
-                        layout="@layout/item_track"
-                        android:id="@+id/track1" />
-
-                    <include
-                        layout="@layout/item_track"
-                        android:id="@+id/track2" />
-
-                    <include
-                        layout="@layout/item_track"
-                        android:id="@+id/track3" />
-
-                    <include
-                        layout="@layout/item_track"
-                        android:id="@+id/track4" />
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- ... -->
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
