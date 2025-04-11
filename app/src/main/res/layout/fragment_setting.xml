@@ -134,6 +134,9 @@
            >
 
             <TextView
+                android:focusable="true"
+                android:clickable="true"
+                android:id="@+id/changeUsernameButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Изменить имя пользователя"
@@ -165,6 +168,9 @@
            >
 
             <TextView
+                android:focusable="true"
+                android:clickable="true"
+                android:id="@+id/changePasswordButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Изменить пароль"
