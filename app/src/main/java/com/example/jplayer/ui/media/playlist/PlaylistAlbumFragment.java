@@ -1,4 +1,4 @@
-package com.example.jplayer.ui;
+package com.example.jplayer.ui.media.playlist;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.example.jplayer.MainActivity;
 import com.example.jplayer.R;
 import com.example.jplayer.adapters.TrackAdapter;
-import com.example.jplayer.database.song.Song;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.FragmentPlaylistAlbumBinding;
 import com.example.jplayer.ui.media.opened.PlaylistAlbumViewModel;

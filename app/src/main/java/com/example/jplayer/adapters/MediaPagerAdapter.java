@@ -1,11 +1,10 @@
-package com.example.jplayer.ui.media;
+package com.example.jplayer.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.jplayer.ui.album.AlbumFragment;
 import com.example.jplayer.ui.media.playlist.PlaylistFragment;
 import com.example.jplayer.ui.media.track.TrackFragment;
 

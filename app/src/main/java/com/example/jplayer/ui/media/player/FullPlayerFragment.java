@@ -1,7 +1,5 @@
-package com.example.jplayer.ui;
+package com.example.jplayer.ui.media.player;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;

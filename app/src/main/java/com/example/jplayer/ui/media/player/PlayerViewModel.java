@@ -1,4 +1,4 @@
-package com.example.jplayer.ui;
+package com.example.jplayer.ui.media.player;
 
 import android.app.Application;
 import androidx.annotation.NonNull;

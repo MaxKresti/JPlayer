@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.media;
+package com.example.jplayer.ui.dashboard;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

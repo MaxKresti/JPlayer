@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/navigation_media"
-    android:name="com.example.jplayer.ui.media.DashboardFragment"
+    android:name="com.example.jplayer.ui.dashboard.DashboardFragment"
     android:label="@string/title_media"
     tools:layout="@layout/fragment_dashboard" />
 

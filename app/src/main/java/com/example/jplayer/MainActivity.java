@@ -26,12 +26,12 @@ import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.playlistSong.PlaylistSong;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.ActivityMainBinding;
-import com.example.jplayer.ui.FullPlayerFragment;
-import com.example.jplayer.ui.MiniPlayerFragment;
-import com.example.jplayer.ui.PlayerViewModel;
-import com.example.jplayer.ui.PlaylistAlbumFragment;
+import com.example.jplayer.ui.media.player.FullPlayerFragment;
+import com.example.jplayer.ui.media.player.MiniPlayerFragment;
+import com.example.jplayer.ui.media.player.PlayerViewModel;
+import com.example.jplayer.ui.media.playlist.PlaylistAlbumFragment;
 
-import com.example.jplayer.ui.setting.SettingFragment;
+import com.example.jplayer.ui.settings.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -275,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.nav_host_fragment_activity_main, fullPlayerFragment, "full_player_fragment")
                 .addToBackStack(null)
                 .commit();
+        hidePlaylistAlbum();
     }
 
     /**

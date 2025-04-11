@@ -169,5 +169,5 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
             return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
         }
-    }
+    }   
 }

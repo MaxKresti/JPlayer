@@ -1,4 +1,4 @@
-package com.example.jplayer.ui;
+package com.example.jplayer.ui.media.playlist;
 
 import android.app.Activity;
 import android.content.Intent;

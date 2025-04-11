@@ -23,17 +23,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.jplayer.R;
 import com.example.jplayer.database.AppDatabase;
 import com.example.jplayer.database.playlist.Playlist;
 import com.example.jplayer.database.song.Song;
 import com.example.jplayer.databinding.FragmentAddNewBinding;
-import com.example.jplayer.ui.CreatePlaylistDialogFragment;
+import com.example.jplayer.ui.media.playlist.CreatePlaylistDialogFragment;
 import com.example.jplayer.ui.media.playlist.PlaylistFragment;
-import com.example.jplayer.ui.media.playlist.PlaylistViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;

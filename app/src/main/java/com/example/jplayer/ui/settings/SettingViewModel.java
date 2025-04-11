@@ -1,4 +1,4 @@
-package com.example.jplayer.ui.setting;
+package com.example.jplayer.ui.settings;
 
 import androidx.lifecycle.ViewModel;
 
