@@ -64,4 +64,6 @@ public interface SongDao {
     @Query("UPDATE songs SET is_favorite = :isFavorite WHERE song_id = :songId")
     void updateFavoriteStatus(int songId, boolean isFavorite);
 
+    @Query("SELECT * FROM songs WHERE user_id = :userId ORDER BY RANDOM() LIMIT 10")
+    LiveData<List<Song>> getRecommendedSongsLive(int userId);
 }
